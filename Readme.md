@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Ekaterina Parshina](https://up.htmlacademy.ru/ecmascript/10/user/1073759).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Донецкий](https://htmlacademy.ru/profile/id497669).
 
 ---
 
