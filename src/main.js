@@ -1,10 +1,11 @@
 import {createSiteMenuTemplate} from './components/menu.js';
 import {createShowMoreButtonTemplate} from './components/show-more-button.js';
 import {createFilmDetailsTemplate} from './components/popup.js';
-import {getRating, createRatingTemplate} from './components/rating.js';
+import {createRatingTemplate} from './components/rating.js';
 import {createFilmCardTemplate} from './components/film-card.js';
 import {createFilmsListTemplate, createSpecialListTemplate} from './components/films-lists.js';
 import {generateCards} from './mock/card';
+import {getRating} from './utils.js';
 import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL} from './const.js';
 
 let showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
@@ -16,7 +17,7 @@ const mostCommentedMovies = cards.slice();
 const filtersCounts = {
   watchlistCount: 0,
   historyCount: 0,
-  favouritesCount: 0,
+  favoritesCount: 0,
 };
 
 /**
@@ -135,8 +136,8 @@ const renderSpecialLists = () => {
 const renderPopup = () => {
   const body = document.querySelector(`body`);
   render(body, createFilmDetailsTemplate(cards[0]));
-  const popup = body.querySelector(`.film-details`);
-  popup.style.display = `none`;
+  // const popup = body.querySelector(`.film-details`);
+  // popup.style.display = `none`;
 };
 
 /**
@@ -156,7 +157,7 @@ const onShowMoreButtonClick = () => {
 
 filtersCounts.watchlistCount = getFilterCount(`isAddedToWatchlist`);
 filtersCounts.historyCount = getFilterCount(`isWatched`);
-filtersCounts.favouritesCount = getFilterCount(`isFavourite`);
+filtersCounts.favoritesCount = getFilterCount(`isFavorite`);
 
 const watchedMoviesCount = getRating(filtersCounts.historyCount);
 

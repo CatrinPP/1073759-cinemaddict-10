@@ -1,19 +1,5 @@
 import {getRandomBoolean, getRandomArrayItem, getRandomDate} from '../utils.js';
-
-const Text = [
-  `Interesting setting and a good cast`,
-  `Booooooooooring`,
-  `Very very old. Meh`,
-  `Almost two hours? Seriously?`
-];
-
-const Emoji = [
-  `./images/emoji/angry.png`,
-  `./images/emoji/puke.png`,
-  `./images/emoji/sleeping.png`,
-  `./images/emoji/smile.png`,
-  `./images/emoji/trophy.png`,
-];
+import {EMOJI, TEXT} from '../const.js';
 
 /**
  * Получить структуру комментария
@@ -24,8 +10,8 @@ const getComment = () => {
 
   return {
     author,
-    text: getRandomArrayItem(Text),
-    emoji: getRandomArrayItem(Emoji),
+    text: getRandomArrayItem(TEXT),
+    emoji: getRandomArrayItem(EMOJI),
     date: getRandomDate()
   };
 };
@@ -37,7 +23,7 @@ const getComment = () => {
  */
 const getComments = (count) => {
   return new Array(count)
-  .fill(``)
+  .fill(null)
   .map(getComment);
 };
 

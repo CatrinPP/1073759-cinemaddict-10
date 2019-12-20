@@ -4,7 +4,7 @@
  * @return {string} {html-код карточки фильма}
  */
 const createFilmCardTemplate = (card) => {
-  const {title, rating, year, duration, genres, poster, description, comments, isAddedToWatchlist, isWatched, isFavourite} = card;
+  const {title, rating, year, duration, genres, poster, description, comments, isAddedToWatchlist, isWatched, isFavorite} = card;
 
   return (
     `<article class="film-card">
@@ -19,9 +19,9 @@ const createFilmCardTemplate = (card) => {
       <p class="film-card__description">${description}</p>
       <a class="film-card__comments">${comments} comments</a>
       <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isAddedToWatchlist ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? `film-card__controls-item--active` : ``}">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavourite ? `film-card__controls-item--active` : ``}">Mark as favorite</button>
+        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isAddedToWatchlist ? `film-card__controls-item--active` : null}">Add to watchlist</button>
+        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? `film-card__controls-item--active` : null}">Mark as watched</button>
+        <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite ? `film-card__controls-item--active` : null}">Mark as favorite</button>
       </form>
     </article>`
   );

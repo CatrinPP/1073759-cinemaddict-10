@@ -1,3 +1,5 @@
+import {RATING} from './const.js';
+
 const getRandomBoolean = () => Math.random() > 0.5;
 
 const getRandomIntegerNumber = (min, max) => {
@@ -25,4 +27,21 @@ const getRandomDate = () => {
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 };
 
-export {getRandomArrayItem, getRandomBoolean, getRandomDecimalNumber, getRandomIntegerNumber, getRandomDate};
+/**
+ * Получает звание пользователя
+ * @param  {number} count {кол-во просмотренных фильмов}
+ * @return {string} {звание пользователя}
+ */
+const getRating = (count) => {
+  let result = ``;
+  if (count > 1 && count <= 10) {
+    result = RATING[0];
+  } else if (count > 10 && count <= 20) {
+    result = RATING[1];
+  } else if (count > 21) {
+    result = RATING[2];
+  }
+  return result;
+};
+
+export {getRandomArrayItem, getRandomBoolean, getRandomDecimalNumber, getRandomIntegerNumber, getRandomDate, getRating};

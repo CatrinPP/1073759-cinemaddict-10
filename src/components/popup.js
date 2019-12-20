@@ -1,5 +1,3 @@
-import {getComments} from '../mock/comment.js';
-
 /**
  * Создает html-код с жанрами
  * @param  {array} filmGenres {массив с жанрами фильма}
@@ -56,7 +54,7 @@ const createFilmDetailsTemplate = (card) => {
    * @return {string} {html-код со всеми комментариями}
    */
   const generateComments = () => {
-    filmComments = getComments(comments).map((comm) => createComment(comm));
+    filmComments = comments.map((comm) => createComment(comm));
     return filmComments;
   };
 
@@ -135,7 +133,7 @@ const createFilmDetailsTemplate = (card) => {
 
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments}</span></h3>
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
             <ul class="film-details__comments-list">${generateComments()}</ul>
 
