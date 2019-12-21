@@ -52,7 +52,7 @@ const sortByRating = (arr) => {
  * @param  {array} arr {массив фильмов}
  */
 const sortByComments = (arr) => {
-  arr.sort((a, b) => b.comments - a.comments);
+  arr.sort((a, b) => b.comments.length - a.comments.length);
 };
 
 /**
@@ -136,8 +136,8 @@ const renderSpecialLists = () => {
 const renderPopup = () => {
   const body = document.querySelector(`body`);
   render(body, createFilmDetailsTemplate(cards[0]));
-  // const popup = body.querySelector(`.film-details`);
-  // popup.style.display = `none`;
+  const popup = body.querySelector(`.film-details`);
+  popup.style.display = `none`;
 };
 
 /**
