@@ -38,6 +38,16 @@ const createComment = (comments) => {
 };
 
 /**
+   * Генерирует разметку со всеми комментарими
+   * @param {array} comments массив с комментариями
+   * @return {string} {html-код со всеми комментариями}
+   */
+const generateComments = (comments) => {
+  const filmComments = comments.map((comm) => createComment(comm));
+  return filmComments;
+};
+
+/**
  * Создает html-код попапа - детализированного описания фильма
  * @param  {object} card {объект структуры карточки}
  * @return {string} {html-код попапа}
@@ -47,16 +57,6 @@ const createFilmDetailsTemplate = (card) => {
     country, genres, description, comments} = card;
   const filmsGenres = createGenresMarkup(Array.from(genres));
   const genresCount = genres.length > 1 ? `Genres` : `Genre`;
-  let filmComments;
-
-  /**
-   * Генерирует все комментарии
-   * @return {string} {html-код со всеми комментариями}
-   */
-  const generateComments = () => {
-    filmComments = comments.map((comm) => createComment(comm));
-    return filmComments;
-  };
 
   return (
     `<section class="film-details">
@@ -135,7 +135,7 @@ const createFilmDetailsTemplate = (card) => {
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
-            <ul class="film-details__comments-list">${generateComments()}</ul>
+            <ul class="film-details__comments-list">${generateComments(comments)}</ul>
 
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label"></div>
