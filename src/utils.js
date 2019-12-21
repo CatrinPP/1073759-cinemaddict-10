@@ -29,8 +29,8 @@ const getRandomDate = () => {
 
 /**
  * Получает звание пользователя
- * @param  {number} count {кол-во просмотренных фильмов}
- * @return {string} {звание пользователя}
+ * @param  {number} count кол-во просмотренных фильмов
+ * @return {string} звание пользователя
  */
 const getRating = (count) => {
   let result = ``;

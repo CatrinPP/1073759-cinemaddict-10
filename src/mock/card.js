@@ -4,7 +4,7 @@ import {getComments} from '../mock/comment.js';
 
 /**
  * Генерирует название фильма
- * @return {string} {название фильма}
+ * @return {string} название фильма
  */
 const generateTitle = () => {
   let title = getRandomArrayItem(TITLE_ITEMS).split(` `);
@@ -15,7 +15,7 @@ const generateTitle = () => {
 
 /**
  * Получает длительность фильма случайным образом
- * @return {string} {длительность фильма}
+ * @return {string} длительность фильма
  */
 const getDuration = () => {
   const hours = `${getRandomIntegerNumber(0, 2)}h `;
@@ -29,7 +29,7 @@ const getDuration = () => {
 
 /**
  * Получает описание фильма случайным набором предложений
- * @return {string} описание фильма}
+ * @return {string} описание фильма
  */
 const getDescription = () => {
   let description = null;
@@ -42,7 +42,7 @@ const getDescription = () => {
 
 /**
  * Генерирует структуру карточки фильма
- * @return {object} {структура карточки фильма}
+ * @return {object} структура карточки фильма
  */
 const generateCard = () => {
   const title = generateTitle();
@@ -73,7 +73,7 @@ const generateCard = () => {
 
 /**
  * Генерирует массив структур карточек фильмов
- * @return {array} {массив структур карточек фильмов}
+ * @return {array} массив структур карточек фильмов
  */
 const generateCards = () => {
   return new Array(CARDS_COUNT)

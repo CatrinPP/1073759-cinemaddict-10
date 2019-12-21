@@ -1,7 +1,7 @@
 /**
  * Создает html-код блока звания пользователя по шаблону
- * @param  {string} rating {звание пользователя}
- * @return {string} {html-код блока звания пользователя}
+ * @param  {string} rating звание пользователя
+ * @return {string} html-код блока звания пользователя
  */
 const createRatingTemplate = (rating) => {
   return (

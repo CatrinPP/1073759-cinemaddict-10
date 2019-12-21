@@ -22,7 +22,7 @@ const filtersCounts = {
 
 /**
  * Выводит общее количество фильмов в сервисе
- * @param  {number} totalMovies {кол-во фильмов}
+ * @param  {number} totalMovies кол-во фильмов
  */
 const fillMoviesCount = (totalMovies) => {
   const total = document.querySelector(`.footer__statistics`).querySelector(`p`);
@@ -31,8 +31,8 @@ const fillMoviesCount = (totalMovies) => {
 
 /**
  * Вычисляет кол-во фильмов соответствующих фильтру
- * @param  {string} property {свойство карточки фильма под фильтр}
- * @return {number} {кол-во фильмов соответствующих фильтру}
+ * @param  {string} property свойство карточки фильма под фильтр
+ * @return {number} кол-во фильмов соответствующих фильтру
  */
 const getFilterCount = (property) => {
   const filter = cards.filter((card) => card[property]);
@@ -41,7 +41,7 @@ const getFilterCount = (property) => {
 
 /**
  * Сортирует массив фильмов по уменьшению рейтинга
- * @param  {array} arr {массив фильмов}
+ * @param  {array} arr массив фильмов
  */
 const sortByRating = (arr) => {
   arr.sort((a, b) => b.rating - a.rating);
@@ -49,7 +49,7 @@ const sortByRating = (arr) => {
 
 /**
  * Сортирует массив фильмов по уменьшению кол-ва комментариев
- * @param  {array} arr {массив фильмов}
+ * @param  {array} arr массив фильмов
  */
 const sortByComments = (arr) => {
   arr.sort((a, b) => b.comments.length - a.comments.length);
@@ -57,9 +57,9 @@ const sortByComments = (arr) => {
 
 /**
  * Рендерит шаблон верстки в контейнер
- * @param  {element} container {DOM-элемент рендеринга}
- * @param  {string} template  {шаблон верстки}
- * @param  {string} place     {местоположение в контейнере}
+ * @param  {element} container DOM-элемент рендеринга
+ * @param  {string} template  шаблон верстки
+ * @param  {string} place     местоположение в контейнере
  */
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
@@ -76,8 +76,8 @@ const renderPageHeader = () => {
 
 /**
  * Рендерит карточки фильмов
- * @param  {number} count     {коли-во карточек}
- * @param  {element} container {DOM-элемент рендеринга}
+ * @param  {number} count     кол-во карточек
+ * @param  {element} container DOM-элемент рендеринга
  */
 const renderCards = (count, container) => {
   const currentCardsList = cards.slice(0, count);
@@ -104,9 +104,9 @@ const renderFilmsCatalog = () => {
 
 /**
  * Рендерит дополнительный блок с фильмами
- * @param  {element} parentContainer {родительский DOM-элемент для блока}
- * @param  {array} arr             {массив с фильмами}
- * @param  {type} title           {название блока}
+ * @param  {element} parentContainer родительский DOM-элемент для блока
+ * @param  {array} arr             массив с фильмами
+ * @param  {type} title           название блока
  */
 const renderExtraList = (parentContainer, arr, title) => {
   render(parentContainer, createSpecialListTemplate(title));
@@ -141,7 +141,8 @@ const renderPopup = () => {
 };
 
 /**
- * @callback {Показывает больше карточек фильмов}
+ * Показывает больше карточек фильмов
+ * @callback
  */
 const onShowMoreButtonClick = () => {
   const prevCardsCount = showingCardsCount;

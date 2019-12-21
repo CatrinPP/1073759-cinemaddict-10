@@ -1,7 +1,7 @@
 /**
  * Создает html-код карточки фильма по шаблону
- * @param  {object} card {объект структуры карточки фильма}
- * @return {string} {html-код карточки фильма}
+ * @param  {object} card объект структуры карточки фильма
+ * @return {string} html-код карточки фильма
  */
 const createFilmCardTemplate = (card) => {
   const {title, rating, year, duration, genres, poster, description, comments, isAddedToWatchlist, isWatched, isFavorite} = card;

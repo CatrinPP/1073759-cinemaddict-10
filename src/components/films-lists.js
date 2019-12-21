@@ -1,6 +1,6 @@
 /**
  * Создает html-код каталога фильмов по шаблону
- * @return {string} {html-код каталога фильмов}
+ * @return {string} html-код каталога фильмов
  */
 const createFilmsListTemplate = () => {
   return (
@@ -21,8 +21,8 @@ const createFilmsListTemplate = () => {
 
 /**
  * Создает html-код доп.блока фильмов по шаблону
- * @param {string} title - название блока
- * @return {string} {html-код доп.блока}
+ * @param {string} title название блока
+ * @return {string} html-код доп.блока
  */
 const createSpecialListTemplate = (title) => {
   return (

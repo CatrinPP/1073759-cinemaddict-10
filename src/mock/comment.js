@@ -3,7 +3,7 @@ import {EMOJI, TEXT} from '../const.js';
 
 /**
  * Получить структуру комментария
- * @return {object} {структура комментария}
+ * @return {object} структура комментария
  */
 const getComment = () => {
   const author = getRandomBoolean() ? `Tim Macoveev` : `John Doe`;
@@ -18,8 +18,8 @@ const getComment = () => {
 
 /**
  * Получить массив структур комментариев
- * @param  {number} count {кол-во комментариев}
- * @return {array} {массив структур комментариев}
+ * @param  {number} count кол-во комментариев
+ * @return {array} массив структур комментариев
  */
 const getComments = (count) => {
   return new Array(count)

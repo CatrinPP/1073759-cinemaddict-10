@@ -1,7 +1,7 @@
 /**
  * Создает html-код меню сайта по шаблону
- * @param  {object} filters {объект с количеством фильмов под каждым фильтром}
- * @return {string} {html-код меню}
+ * @param  {object} filters объект с количеством фильмов под каждым фильтром
+ * @return {string} html-код меню
  */
 const createSiteMenuTemplate = (filters) => {
   const {watchlistCount, historyCount, favoritesCount} = filters;

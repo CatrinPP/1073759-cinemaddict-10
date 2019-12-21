@@ -1,6 +1,6 @@
 /**
  * Создает html-код кнопки Show More по шаблону
- * @return {string} {html-код кнопки Show More}
+ * @return {string} html-код кнопки Show More
  */
 const createShowMoreButtonTemplate = () => {
   return (

@@ -1,7 +1,7 @@
 /**
  * Создает html-код с жанрами
- * @param  {array} filmGenres {массив с жанрами фильма}
- * @return {string} {html-код жанров}
+ * @param  {array} filmGenres массив с жанрами фильма
+ * @return {string} html-код жанров
  */
 const createGenresMarkup = (filmGenres) => {
   return filmGenres.map((genreItem) => {
@@ -14,8 +14,8 @@ const createGenresMarkup = (filmGenres) => {
 
 /**
  * Создает html-код комментария по шаблону
- * @param  {object} comments {объект структуры комментария}
- * @return {string} {html-код комментария}
+ * @param  {object} comments объект структуры комментария
+ * @return {string} html-код комментария
  */
 const createComment = (comments) => {
   const {author, text, emoji, date} = comments;
@@ -40,7 +40,7 @@ const createComment = (comments) => {
 /**
    * Генерирует разметку со всеми комментарими
    * @param {array} comments массив с комментариями
-   * @return {string} {html-код со всеми комментариями}
+   * @return {string} html-код со всеми комментариями
    */
 const generateComments = (comments) => {
   const filmComments = comments.map((comm) => createComment(comm));
@@ -49,8 +49,8 @@ const generateComments = (comments) => {
 
 /**
  * Создает html-код попапа - детализированного описания фильма
- * @param  {object} card {объект структуры карточки}
- * @return {string} {html-код попапа}
+ * @param  {object} card объект структуры карточки
+ * @return {string} html-код попапа
  */
 const createFilmDetailsTemplate = (card) => {
   const {poster, age, title, originalTitle, rating, director, writers, actors, releaseDate, duration,
