@@ -136,8 +136,8 @@ const renderSpecialLists = () => {
 const renderPopup = () => {
   const body = document.querySelector(`body`);
   render(body, createFilmDetailsTemplate(cards[0]));
-  const popup = body.querySelector(`.film-details`);
-  popup.style.display = `none`;
+  // const popup = body.querySelector(`.film-details`);
+  // popup.style.display = `none`;
 };
 
 /**
