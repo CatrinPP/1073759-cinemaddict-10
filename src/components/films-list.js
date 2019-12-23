@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 /**
  * Создает html-код каталога фильмов по шаблону
  * @return {string} html-код каталога фильмов
@@ -19,19 +21,24 @@ const createFilmsListTemplate = () => {
   );
 };
 
-/**
- * Создает html-код доп.блока фильмов по шаблону
- * @param {string} title название блока
- * @return {string} html-код доп.блока
- */
-const createSpecialListTemplate = (title) => {
-  return (
-    `<section class="films-list--extra">
-      <h2 class="films-list__title">${title}</h2>
+export default class FilmCatalog {
+  constructor() {
+    this._element = null;
+  }
 
-      <div class="films-list__container  ${title.substring(0, 3).toLowerCase()}-container"></div>
-    </section>`
-  );
-};
+  getTemplate() {
+    return createFilmsListTemplate();
+  }
 
-export {createFilmsListTemplate, createSpecialListTemplate};
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
