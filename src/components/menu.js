@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 /**
  * Создает html-код меню сайта по шаблону
  * @param  {object} filters объект с количеством фильмов под каждым фильтром
@@ -17,4 +19,24 @@ const createSiteMenuTemplate = (filters) => {
   );
 };
 
-export {createSiteMenuTemplate};
+export default class SiteMenu {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteMenuTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
