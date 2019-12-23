@@ -6,7 +6,7 @@ import FilmCardComponent from './components/film-card.js';
 import FilmsListComponent from './components/films-list.js';
 import SpecialListComponent from './components/special-list.js';
 import {generateCards} from './mock/card';
-import {getRating, render, RenderPosition} from './utils.js';
+import {getRating, render, RenderPosition, isEscEvent} from './utils.js';
 import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL} from './const.js';
 
 let showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
@@ -66,13 +66,62 @@ const renderPageHeader = () => {
 };
 
 /**
+ * Генерирует подробную карточку для попапа
+ * @param  {object} card    объект карточки фильма
+ * @param  {element} newCard элемент карточки фильма
+ */
+const generateDetailedCard = (card, newCard) => {
+  const detailedCard = new PopupComponent(card);
+  const cover = newCard.querySelector(`.film-card__poster`);
+  const title = newCard.querySelector(`.film-card__title`);
+  cover.style = `cursor:pointer`;
+  title.style = `cursor:pointer`;
+  const comments = newCard.querySelector(`.film-card__comments`);
+  const body = document.querySelector(`body`);
+
+  /**
+   * Удаляет попап из DOM
+   */
+  const removePopup = () => {
+    detailedCard.removeElement();
+    body.querySelector(`.film-details`).remove();
+  };
+
+  /**
+   * Рендерит попап - детализированное описание фильма
+   */
+  const renderPopup = function () {
+    if (body.querySelector(`.film-details`)) {
+      removePopup();
+    }
+
+    render(body, detailedCard.getElement(), RenderPosition.BEFOREEND);
+
+    const close = detailedCard.getElement().querySelector(`.film-details__close-btn`);
+
+    close.addEventListener(`click`, removePopup);
+    document.addEventListener(`keydown`, function (evt) {
+      isEscEvent(evt, removePopup);
+    });
+  };
+
+  cover.addEventListener(`click`, renderPopup);
+  title.addEventListener(`click`, renderPopup);
+  comments.addEventListener(`click`, renderPopup);
+};
+
+/**
  * Рендерит карточки фильмов
  * @param  {number} count     кол-во карточек
  * @param  {element} container DOM-элемент рендеринга
  */
 const renderCards = (count, container) => {
   const currentCardsList = cards.slice(0, count);
-  currentCardsList.forEach((card) => render(container, new FilmCardComponent(card).getElement(), RenderPosition.BEFOREEND));
+  currentCardsList.forEach((card) => {
+    const newCard = new FilmCardComponent(card).getElement();
+    render(container, newCard, RenderPosition.BEFOREEND);
+    generateDetailedCard(card, newCard);
+  });
 };
 
 /**
@@ -103,7 +152,11 @@ const renderExtraList = (parentContainer, arr, title) => {
   render(parentContainer, new SpecialListComponent(title).getElement(), RenderPosition.BEFOREEND);
   const container = parentContainer.querySelector(`.${title.substring(0, 3).toLowerCase()}-container`);
   const currentCardsList = arr.slice(0, CARDS_COUNT_ADDITIONAL);
-  currentCardsList.forEach((card) => render(container, new FilmCardComponent(card).getElement(), RenderPosition.BEFOREEND));
+  currentCardsList.forEach((card) => {
+    const newCard = new FilmCardComponent(card).getElement();
+    render(container, newCard, RenderPosition.BEFOREEND);
+    generateDetailedCard(card, newCard);
+  });
 };
 
 /**
@@ -122,16 +175,6 @@ const renderSpecialLists = () => {
 };
 
 /**
- * Рендерит попап - детализированное описание фильма
- */
-const renderPopup = () => {
-  const body = document.querySelector(`body`);
-  render(body, new PopupComponent(cards[0]).getElement(), RenderPosition.BEFOREEND);
-  const popup = body.querySelector(`.film-details`);
-  popup.style.display = `none`;
-};
-
-/**
  * Показывает больше карточек фильмов
  * @callback
  */
@@ -140,7 +183,11 @@ const onShowMoreButtonClick = () => {
   showingCardsCount = showingCardsCount + SHOWING_CARDS_COUNT_BY_BUTTON;
 
   cards.slice(prevCardsCount, showingCardsCount)
-    .forEach((card) => render(filmsCardsContainer, new FilmCardComponent(card).getElement(), RenderPosition.BEFOREEND));
+    .forEach((card) => {
+      const newCard = new FilmCardComponent(card).getElement();
+      render(filmsCardsContainer, newCard, RenderPosition.BEFOREEND);
+      generateDetailedCard(card, newCard);
+    });
 
   if (showingCardsCount >= cards.length) {
     showMoreButton.remove();
@@ -159,7 +206,6 @@ fillMoviesCount(cards.length);
 renderPageHeader();
 renderFilmsCatalog();
 renderSpecialLists();
-renderPopup();
 
 const showMoreButton = siteMainElement.querySelector(`.films-list__show-more`);
 showMoreButton.addEventListener(`click`, onShowMoreButtonClick);

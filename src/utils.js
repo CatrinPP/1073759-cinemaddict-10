@@ -1,4 +1,4 @@
-import {RATING} from './const.js';
+import {RATING, ESC_KEYCODE} from './const.js';
 
 const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
@@ -73,6 +73,12 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
+const isEscEvent = (evt, action) => {
+  if (evt.keyCode === ESC_KEYCODE) {
+    action();
+  }
+};
+
 export {
   RenderPosition,
   getRandomArrayItem,
@@ -82,5 +88,6 @@ export {
   getRandomDate,
   getRating,
   render,
-  createElement
+  createElement,
+  isEscEvent
 };
