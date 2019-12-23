@@ -5,6 +5,7 @@ import RatingComponent from './components/rating.js';
 import FilmCardComponent from './components/film-card.js';
 import FilmsListComponent from './components/films-list.js';
 import SpecialListComponent from './components/special-list.js';
+import SortComponent from './components/sort.js';
 import {generateCards} from './mock/card';
 import {getRating, render, RenderPosition, isEscEvent} from './utils.js';
 import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL} from './const.js';
@@ -136,6 +137,7 @@ const renderShowMoreButton = () => {
  * Рендерит каталог фильмов
  */
 const renderFilmsCatalog = () => {
+  render(siteMainElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
   render(siteMainElement, new FilmsListComponent().getElement(), RenderPosition.BEFOREEND);
   filmsCardsContainer = siteMainElement.querySelector(`.films-list__container`);
   renderCards(showingCardsCount, filmsCardsContainer);
