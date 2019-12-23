@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 /**
  * Создает html-код блока звания пользователя по шаблону
  * @param  {string} rating звание пользователя
@@ -12,4 +14,25 @@ const createRatingTemplate = (rating) => {
   );
 };
 
-export {createRatingTemplate};
+export default class Rating {
+  constructor(rating) {
+    this._rating = rating;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createRatingTemplate(this._rating);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
