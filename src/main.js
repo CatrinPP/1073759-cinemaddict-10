@@ -5,7 +5,7 @@ import {createRatingTemplate} from './components/rating.js';
 import {createFilmCardTemplate} from './components/film-card.js';
 import {createFilmsListTemplate, createSpecialListTemplate} from './components/films-lists.js';
 import {generateCards} from './mock/card';
-import {getRating} from './utils.js';
+import {getRating, render, RenderPosition} from './utils.js';
 import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL} from './const.js';
 
 let showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
@@ -53,16 +53,6 @@ const sortByRating = (arr) => {
  */
 const sortByComments = (arr) => {
   arr.sort((a, b) => b.comments.length - a.comments.length);
-};
-
-/**
- * Рендерит шаблон верстки в контейнер
- * @param  {element} container DOM-элемент рендеринга
- * @param  {string} template  шаблон верстки
- * @param  {string} place     местоположение в контейнере
- */
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
 };
 
 /**
