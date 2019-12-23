@@ -101,10 +101,17 @@ const generateDetailedCard = (card, newCard) => {
 
     const close = detailedCard.getElement().querySelector(`.film-details__close-btn`);
 
-    close.addEventListener(`click`, removePopup);
-    document.addEventListener(`keydown`, function (evt) {
-      isEscEvent(evt, removePopup);
-    });
+    const onEscPress = (evt) => {
+      isEscEvent(evt, removePopup, onEscPress);
+    };
+
+    const onCloseButtonClick = () => {
+      removePopup();
+      document.removeEventListener(`keydown`, onEscPress);
+    };
+
+    close.addEventListener(`click`, onCloseButtonClick);
+    document.addEventListener(`keydown`, onEscPress);
   };
 
   cover.addEventListener(`click`, renderPopup);

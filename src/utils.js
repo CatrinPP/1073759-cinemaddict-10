@@ -73,9 +73,16 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-const isEscEvent = (evt, action) => {
+/**
+ * Запускает действие при нажатии ESC
+ * @param  {event} evt
+ * @param  {function} action  Выполняемое действие
+ * @param  {function} handler Удаляемый обработчик события
+ */
+const isEscEvent = (evt, action, handler) => {
   if (evt.keyCode === ESC_KEYCODE) {
     action();
+    document.removeEventListener(`keydown`, handler);
   }
 };
 
