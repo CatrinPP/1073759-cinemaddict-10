@@ -61,8 +61,8 @@ const sortByComments = (arr) => {
  */
 const renderPageHeader = () => {
   const siteHeaderElement = document.querySelector(`.header`);
-  render(siteHeaderElement, new RatingComponent(watchedMoviesCount), RenderPosition.BEFOREEND);
-  render(siteMainElement, new SiteMenuComponent(filtersCounts), RenderPosition.BEFOREEND);
+  render(siteHeaderElement, new RatingComponent(watchedMoviesCount).getElement(), RenderPosition.BEFOREEND);
+  render(siteMainElement, new SiteMenuComponent(filtersCounts).getElement(), RenderPosition.BEFOREEND);
 };
 
 /**
@@ -72,7 +72,7 @@ const renderPageHeader = () => {
  */
 const renderCards = (count, container) => {
   const currentCardsList = cards.slice(0, count);
-  currentCardsList.forEach((card) => render(container, new FilmCardComponent(card), RenderPosition.BEFOREEND));
+  currentCardsList.forEach((card) => render(container, new FilmCardComponent(card).getElement(), RenderPosition.BEFOREEND));
 };
 
 /**
@@ -80,14 +80,14 @@ const renderCards = (count, container) => {
  */
 const renderShowMoreButton = () => {
   const filmsList = siteMainElement.querySelector(`.films-list`);
-  render(filmsList, new ShowMoreButtonComponent(), RenderPosition.BEFOREEND);
+  render(filmsList, new ShowMoreButtonComponent().getElement(), RenderPosition.BEFOREEND);
 };
 
 /**
  * Рендерит каталог фильмов
  */
 const renderFilmsCatalog = () => {
-  render(siteMainElement, new FilmsListComponent(), RenderPosition.BEFOREEND);
+  render(siteMainElement, new FilmsListComponent().getElement(), RenderPosition.BEFOREEND);
   filmsCardsContainer = siteMainElement.querySelector(`.films-list__container`);
   renderCards(showingCardsCount, filmsCardsContainer);
   renderShowMoreButton();
@@ -100,10 +100,10 @@ const renderFilmsCatalog = () => {
  * @param  {type} title           название блока
  */
 const renderExtraList = (parentContainer, arr, title) => {
-  render(parentContainer, new SpecialListComponent(title), RenderPosition.BEFOREEND);
+  render(parentContainer, new SpecialListComponent(title).getElement(), RenderPosition.BEFOREEND);
   const container = parentContainer.querySelector(`.${title.substring(0, 3).toLowerCase()}-container`);
   const currentCardsList = arr.slice(0, CARDS_COUNT_ADDITIONAL);
-  currentCardsList.forEach((card) => render(container, new FilmCardComponent(card), RenderPosition.BEFOREEND));
+  currentCardsList.forEach((card) => render(container, new FilmCardComponent(card).getElement(), RenderPosition.BEFOREEND));
 };
 
 /**
@@ -126,9 +126,9 @@ const renderSpecialLists = () => {
  */
 const renderPopup = () => {
   const body = document.querySelector(`body`);
-  render(body, new PopupComponent(cards[0]), RenderPosition.BEFOREEND);
-  // const popup = body.querySelector(`.film-details`);
-  // popup.style.display = `none`;
+  render(body, new PopupComponent(cards[0]).getElement(), RenderPosition.BEFOREEND);
+  const popup = body.querySelector(`.film-details`);
+  popup.style.display = `none`;
 };
 
 /**
@@ -140,7 +140,7 @@ const onShowMoreButtonClick = () => {
   showingCardsCount = showingCardsCount + SHOWING_CARDS_COUNT_BY_BUTTON;
 
   cards.slice(prevCardsCount, showingCardsCount)
-    .forEach((card) => render(filmsCardsContainer, new FilmCardComponent(card), RenderPosition.BEFOREEND));
+    .forEach((card) => render(filmsCardsContainer, new FilmCardComponent(card).getElement(), RenderPosition.BEFOREEND));
 
   if (showingCardsCount >= cards.length) {
     showMoreButton.remove();
