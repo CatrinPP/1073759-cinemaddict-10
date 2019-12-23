@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 /**
  * Создает html-код с жанрами
  * @param  {array} filmGenres массив с жанрами фильма
@@ -173,4 +175,25 @@ const createFilmDetailsTemplate = (card) => {
   );
 };
 
-export {createFilmDetailsTemplate};
+export default class Popup {
+  constructor(card) {
+    this._card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
