@@ -1,9 +1,10 @@
-import {createSiteMenuTemplate} from './components/menu.js';
-import {createShowMoreButtonTemplate} from './components/show-more-button.js';
-import {createFilmDetailsTemplate} from './components/popup.js';
-import {createRatingTemplate} from './components/rating.js';
-import {createFilmCardTemplate} from './components/film-card.js';
-import {createFilmsListTemplate, createSpecialListTemplate} from './components/films-lists.js';
+import SiteMenuComponent from './components/menu.js';
+import ShowMoreButtonComponent from './components/show-more-button.js';
+import PopupComponent from './components/popup.js';
+import RatingComponent from './components/rating.js';
+import FilmCardComponent from './components/film-card.js';
+import FilmsListComponent from './components/films-list.js';
+import SpecialListComponent from './components/special-list.js';
 import {generateCards} from './mock/card';
 import {getRating, render, RenderPosition} from './utils.js';
 import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL} from './const.js';
@@ -60,8 +61,8 @@ const sortByComments = (arr) => {
  */
 const renderPageHeader = () => {
   const siteHeaderElement = document.querySelector(`.header`);
-  render(siteHeaderElement, createRatingTemplate(watchedMoviesCount));
-  render(siteMainElement, createSiteMenuTemplate(filtersCounts));
+  render(siteHeaderElement, new RatingComponent(watchedMoviesCount), RenderPosition.BEFOREEND);
+  render(siteMainElement, new SiteMenuComponent(filtersCounts), RenderPosition.BEFOREEND);
 };
 
 /**
@@ -71,7 +72,7 @@ const renderPageHeader = () => {
  */
 const renderCards = (count, container) => {
   const currentCardsList = cards.slice(0, count);
-  currentCardsList.forEach((card) => render(container, createFilmCardTemplate(card)));
+  currentCardsList.forEach((card) => render(container, new FilmCardComponent(card), RenderPosition.BEFOREEND));
 };
 
 /**
@@ -79,14 +80,14 @@ const renderCards = (count, container) => {
  */
 const renderShowMoreButton = () => {
   const filmsList = siteMainElement.querySelector(`.films-list`);
-  render(filmsList, createShowMoreButtonTemplate());
+  render(filmsList, new ShowMoreButtonComponent(), RenderPosition.BEFOREEND);
 };
 
 /**
  * Рендерит каталог фильмов
  */
 const renderFilmsCatalog = () => {
-  render(siteMainElement, createFilmsListTemplate());
+  render(siteMainElement, new FilmsListComponent(), RenderPosition.BEFOREEND);
   filmsCardsContainer = siteMainElement.querySelector(`.films-list__container`);
   renderCards(showingCardsCount, filmsCardsContainer);
   renderShowMoreButton();
@@ -99,10 +100,10 @@ const renderFilmsCatalog = () => {
  * @param  {type} title           название блока
  */
 const renderExtraList = (parentContainer, arr, title) => {
-  render(parentContainer, createSpecialListTemplate(title));
+  render(parentContainer, new SpecialListComponent(title), RenderPosition.BEFOREEND);
   const container = parentContainer.querySelector(`.${title.substring(0, 3).toLowerCase()}-container`);
   const currentCardsList = arr.slice(0, CARDS_COUNT_ADDITIONAL);
-  currentCardsList.forEach((card) => render(container, createFilmCardTemplate(card)));
+  currentCardsList.forEach((card) => render(container, new FilmCardComponent(card), RenderPosition.BEFOREEND));
 };
 
 /**
@@ -125,7 +126,7 @@ const renderSpecialLists = () => {
  */
 const renderPopup = () => {
   const body = document.querySelector(`body`);
-  render(body, createFilmDetailsTemplate(cards[0]));
+  render(body, new PopupComponent(cards[0]), RenderPosition.BEFOREEND);
   // const popup = body.querySelector(`.film-details`);
   // popup.style.display = `none`;
 };
@@ -139,7 +140,7 @@ const onShowMoreButtonClick = () => {
   showingCardsCount = showingCardsCount + SHOWING_CARDS_COUNT_BY_BUTTON;
 
   cards.slice(prevCardsCount, showingCardsCount)
-    .forEach((card) => render(filmsCardsContainer, createFilmCardTemplate(card)));
+    .forEach((card) => render(filmsCardsContainer, new FilmCardComponent(card), RenderPosition.BEFOREEND));
 
   if (showingCardsCount >= cards.length) {
     showMoreButton.remove();
