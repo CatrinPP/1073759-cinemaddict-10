@@ -20,12 +20,13 @@ const createSiteMenuTemplate = (filters) => {
 };
 
 export default class SiteMenu {
-  constructor() {
+  constructor(filters) {
+    this._filters = filters;
     this._element = null;
   }
 
   getTemplate() {
-    return createSiteMenuTemplate();
+    return createSiteMenuTemplate(this._filters);
   }
 
   getElement() {
