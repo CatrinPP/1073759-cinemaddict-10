@@ -13,6 +13,7 @@ import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT
 
 let showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
 const siteMainElement = document.querySelector(`.main`);
+const body = document.querySelector(`body`);
 let filmsCardsContainer = null;
 const cards = generateCards();
 const topRatedMovies = cards.slice();
@@ -68,7 +69,44 @@ const renderPageHeader = () => {
 };
 
 /**
- * Генерирует подробную карточку для попапа
+ * Удаляет попап
+ * @param  {object} popup объект попапа
+ */
+const removePopup = (popup) => {
+  popup.removeElement();
+  body.querySelector(`.film-details`).remove();
+};
+
+/**
+ * Отрисовывает попап
+ * @param  {object} popup объект попапа
+ */
+const renderPopup = (popup) => {
+  const onEscPress = (evt) => {
+    if (isEscEvent(evt)) {
+      removePopup(popup);
+      document.removeEventListener(`keydown`, onEscPress);
+    }
+  };
+
+  const onCloseButtonClick = () => {
+    removePopup(popup);
+    document.removeEventListener(`keydown`, onEscPress);
+  };
+
+  if (body.querySelector(`.film-details`)) {
+    removePopup(popup);
+  }
+
+  render(body, popup.getElement(), RenderPosition.BEFOREEND);
+  document.addEventListener(`keydown`, onEscPress);
+
+  const close = popup.getElement().querySelector(`.film-details__close-btn`);
+  close.addEventListener(`click`, onCloseButtonClick);
+};
+
+/**
+ * Генерирует попап при клике на элементы карточки
  * @param  {object} card    объект карточки фильма
  * @param  {element} newCard элемент карточки фильма
  */
@@ -79,51 +117,14 @@ const generateDetailedCard = (card, newCard) => {
   cover.style = `cursor:pointer`;
   title.style = `cursor:pointer`;
   const comments = newCard.querySelector(`.film-card__comments`);
-  const body = document.querySelector(`body`);
 
-  /**
-   * Удаляет попап из DOM
-   */
-  const removePopup = () => {
-    detailedCard.removeElement();
-    body.querySelector(`.film-details`).remove();
+  const onCardClick = () => {
+    renderPopup(detailedCard);
   };
 
-  /**
-   * Рендерит попап - детализированное описание фильма
-   */
-  const renderPopup = () => {
-    if (body.querySelector(`.film-details`)) {
-      removePopup();
-    }
-
-    render(body, detailedCard.getElement(), RenderPosition.BEFOREEND);
-
-    const close = detailedCard.getElement().querySelector(`.film-details__close-btn`);
-
-    /**
-     * Обработчик нажатия на ESC
-     * @param  {event} evt
-     */
-    const onEscPress = (evt) => {
-      if (isEscEvent(evt)) {
-        removePopup();
-        document.removeEventListener(`keydown`, onEscPress);
-      }
-    };
-
-    const onCloseButtonClick = () => {
-      removePopup();
-      document.removeEventListener(`keydown`, onEscPress);
-    };
-
-    close.addEventListener(`click`, onCloseButtonClick);
-    document.addEventListener(`keydown`, onEscPress);
-  };
-
-  cover.addEventListener(`click`, renderPopup);
-  title.addEventListener(`click`, renderPopup);
-  comments.addEventListener(`click`, renderPopup);
+  cover.addEventListener(`click`, onCardClick);
+  title.addEventListener(`click`, onCardClick);
+  comments.addEventListener(`click`, onCardClick);
 };
 
 /**
