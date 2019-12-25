@@ -101,8 +101,15 @@ const generateDetailedCard = (card, newCard) => {
 
     const close = detailedCard.getElement().querySelector(`.film-details__close-btn`);
 
+    /**
+     * Обработчик нажатия на ESC
+     * @param  {event} evt
+     */
     const onEscPress = (evt) => {
-      isEscEvent(evt, removePopup, onEscPress);
+      if (isEscEvent(evt)) {
+        removePopup();
+        document.removeEventListener(`keydown`, onEscPress);
+      }
     };
 
     const onCloseButtonClick = () => {
