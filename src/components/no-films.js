@@ -1,13 +1,17 @@
 import {createElement} from '../utils.js';
 
-export default class ShowMoreButton {
+export default class NoFilms {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
     return (
-      `<button class="films-list__show-more">Show more</button>`
+      `<section class="films">
+        <section class="films-list">
+          <h2 class="films-list__title">There are no movies in our database</h2>
+        </section>
+      </section>`
     );
   }
 

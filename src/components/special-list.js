@@ -1,16 +1,17 @@
 import {createElement} from '../utils.js';
 
-export default class Rating {
-  constructor(rating) {
-    this._rating = rating;
+export default class SpecialList {
+  constructor(title) {
+    this._title = title;
     this._element = null;
   }
 
   getTemplate() {
     return (
-      `<section class="header__profile profile">
-        <p class="profile__rating">${this._rating}</p>
-        <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
+      `<section class="films-list--extra">
+        <h2 class="films-list__title">${this._title}</h2>
+
+        <div class="films-list__container  ${this._title.substring(0, 3).toLowerCase()}-container"></div>
       </section>`
     );
   }
