@@ -1,22 +1,14 @@
 import {createElement} from '../utils.js';
 
-/**
- * Создает html-код кнопки Show More по шаблону
- * @return {string} html-код кнопки Show More
- */
-const createShowMoreButtonTemplate = () => {
-  return (
-    `<button class="films-list__show-more">Show more</button>`
-  );
-};
-
 export default class ShowMoreButton {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createShowMoreButtonTemplate();
+    return (
+      `<button class="films-list__show-more">Show more</button>`
+    );
   }
 
   getElement() {

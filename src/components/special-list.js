@@ -1,20 +1,5 @@
 import {createElement} from '../utils.js';
 
-/**
- * Создает html-код доп.блока фильмов по шаблону
- * @param {string} title название блока
- * @return {string} html-код доп.блока
- */
-const createSpecialListTemplate = (title) => {
-  return (
-    `<section class="films-list--extra">
-      <h2 class="films-list__title">${title}</h2>
-
-      <div class="films-list__container  ${title.substring(0, 3).toLowerCase()}-container"></div>
-    </section>`
-  );
-};
-
 export default class SpecialList {
   constructor(title) {
     this._title = title;
@@ -22,7 +7,13 @@ export default class SpecialList {
   }
 
   getTemplate() {
-    return createSpecialListTemplate(this._title);
+    return (
+      `<section class="films-list--extra">
+        <h2 class="films-list__title">${this._title}</h2>
+
+        <div class="films-list__container  ${this._title.substring(0, 3).toLowerCase()}-container"></div>
+      </section>`
+    );
   }
 
   getElement() {
