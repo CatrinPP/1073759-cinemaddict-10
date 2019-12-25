@@ -92,7 +92,7 @@ const generateDetailedCard = (card, newCard) => {
   /**
    * Рендерит попап - детализированное описание фильма
    */
-  const renderPopup = function () {
+  const renderPopup = () => {
     if (body.querySelector(`.film-details`)) {
       removePopup();
     }
