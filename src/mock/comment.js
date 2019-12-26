@@ -1,4 +1,4 @@
-import {getRandomBoolean, getRandomArrayItem, getRandomDate} from '../utils.js';
+import {getRandomBoolean, getRandomArrayItem, getRandomDate} from '../utils/common.js';
 import {EMOJI, TEXT} from '../const.js';
 
 /**

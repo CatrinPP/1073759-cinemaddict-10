@@ -1,5 +1,5 @@
 import {CARDS_COUNT, POSTER_ITEMS, GENRE_ITEMS, DESCRIPTION_ITEMS, TITLE_ITEMS} from '../const.js';
-import {getRandomArrayItem, getRandomBoolean, getRandomDecimalNumber, getRandomIntegerNumber} from '../utils.js';
+import {getRandomArrayItem, getRandomBoolean, getRandomDecimalNumber, getRandomIntegerNumber} from '../utils/common.js';
 import {getComments} from '../mock/comment.js';
 
 /**

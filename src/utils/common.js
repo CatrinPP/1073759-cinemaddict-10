@@ -1,9 +1,4 @@
-import {RATING, ESC_KEYCODE} from './const.js';
-
-const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
-};
+import {RATING, ESC_KEYCODE} from '../const.js';
 
 const getRandomBoolean = () => Math.random() > 0.5;
 
@@ -49,43 +44,16 @@ const getRating = (count) => {
   return result;
 };
 
-/**
- * Рендерит шаблон верстки в контейнер
- * @param  {element} container DOM-элемент рендеринга
- * @param  {string} element  эелемент вставки
- * @param  {string} place     местоположение в контейнере
- */
-const render = (container, element, place) => {
-  switch (place) {
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-  }
-};
-
-const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
 const isEscEvent = (evt) => {
   return evt.keyCode === ESC_KEYCODE;
 };
 
 export {
-  RenderPosition,
   getRandomArrayItem,
   getRandomBoolean,
   getRandomDecimalNumber,
   getRandomIntegerNumber,
   getRandomDate,
   getRating,
-  render,
-  createElement,
   isEscEvent
 };

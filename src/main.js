@@ -8,7 +8,8 @@ import SpecialListComponent from './components/special-list.js';
 import SortComponent from './components/sort.js';
 import NoFilmsComponent from './components/no-films.js';
 import {generateCards} from './mock/card';
-import {getRating, render, RenderPosition, isEscEvent} from './utils.js';
+import {render, RenderPosition} from './utils/render.js';
+import {getRating, isEscEvent} from './utils/common.js';
 import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL} from './const.js';
 
 let showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
@@ -64,8 +65,8 @@ const sortByComments = (arr) => {
  */
 const renderPageHeader = () => {
   const siteHeaderElement = document.querySelector(`.header`);
-  render(siteHeaderElement, new RatingComponent(watchedMoviesCount).getElement(), RenderPosition.BEFOREEND);
-  render(siteMainElement, new SiteMenuComponent(filtersCounts).getElement(), RenderPosition.BEFOREEND);
+  render(siteHeaderElement, new RatingComponent(watchedMoviesCount), RenderPosition.BEFOREEND);
+  render(siteMainElement, new SiteMenuComponent(filtersCounts), RenderPosition.BEFOREEND);
 };
 
 /**
@@ -98,7 +99,7 @@ const renderPopup = (popup) => {
     removePopup(popup);
   }
 
-  render(body, popup.getElement(), RenderPosition.BEFOREEND);
+  render(body, popup, RenderPosition.BEFOREEND);
   document.addEventListener(`keydown`, onEscPress);
 
   const close = popup.getElement().querySelector(`.film-details__close-btn`);
@@ -108,15 +109,15 @@ const renderPopup = (popup) => {
 /**
  * Генерирует попап при клике на элементы карточки
  * @param  {object} card    объект карточки фильма
- * @param  {element} newCard элемент карточки фильма
+ * @param  {object} newCard компонент карточки фильма
  */
 const generateDetailedCard = (card, newCard) => {
   const detailedCard = new PopupComponent(card);
-  const cover = newCard.querySelector(`.film-card__poster`);
-  const title = newCard.querySelector(`.film-card__title`);
+  const cover = newCard.getElement().querySelector(`.film-card__poster`);
+  const title = newCard.getElement().querySelector(`.film-card__title`);
   cover.style = `cursor:pointer`;
   title.style = `cursor:pointer`;
-  const comments = newCard.querySelector(`.film-card__comments`);
+  const comments = newCard.getElement().querySelector(`.film-card__comments`);
 
   const onCardClick = () => {
     renderPopup(detailedCard);
@@ -135,7 +136,7 @@ const generateDetailedCard = (card, newCard) => {
 const renderCards = (count, container) => {
   const currentCardsList = cards.slice(0, count);
   currentCardsList.forEach((card) => {
-    const newCard = new FilmCardComponent(card).getElement();
+    const newCard = new FilmCardComponent(card);
     render(container, newCard, RenderPosition.BEFOREEND);
     generateDetailedCard(card, newCard);
   });
@@ -146,7 +147,7 @@ const renderCards = (count, container) => {
  */
 const renderShowMoreButton = () => {
   const filmsList = siteMainElement.querySelector(`.films-list`);
-  render(filmsList, new ShowMoreButtonComponent().getElement(), RenderPosition.BEFOREEND);
+  render(filmsList, new ShowMoreButtonComponent(), RenderPosition.BEFOREEND);
 };
 
 /**
@@ -154,10 +155,10 @@ const renderShowMoreButton = () => {
  */
 const renderFilmsCatalog = () => {
   if (!cards.length) {
-    render(siteMainElement, new NoFilmsComponent().getElement(), RenderPosition.BEFOREEND);
+    render(siteMainElement, new NoFilmsComponent(), RenderPosition.BEFOREEND);
   } else {
-    render(siteMainElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
-    render(siteMainElement, new FilmsListComponent().getElement(), RenderPosition.BEFOREEND);
+    render(siteMainElement, new SortComponent(), RenderPosition.BEFOREEND);
+    render(siteMainElement, new FilmsListComponent(), RenderPosition.BEFOREEND);
     filmsCardsContainer = siteMainElement.querySelector(`.films-list__container`);
     renderCards(showingCardsCount, filmsCardsContainer);
     renderShowMoreButton();
@@ -171,11 +172,11 @@ const renderFilmsCatalog = () => {
  * @param  {type} title           название блока
  */
 const renderExtraList = (parentContainer, arr, title) => {
-  render(parentContainer, new SpecialListComponent(title).getElement(), RenderPosition.BEFOREEND);
+  render(parentContainer, new SpecialListComponent(title), RenderPosition.BEFOREEND);
   const container = parentContainer.querySelector(`.${title.substring(0, 3).toLowerCase()}-container`);
   const currentCardsList = arr.slice(0, CARDS_COUNT_ADDITIONAL);
   currentCardsList.forEach((card) => {
-    const newCard = new FilmCardComponent(card).getElement();
+    const newCard = new FilmCardComponent(card);
     render(container, newCard, RenderPosition.BEFOREEND);
     generateDetailedCard(card, newCard);
   });
@@ -206,7 +207,7 @@ const onShowMoreButtonClick = () => {
 
   cards.slice(prevCardsCount, showingCardsCount)
     .forEach((card) => {
-      const newCard = new FilmCardComponent(card).getElement();
+      const newCard = new FilmCardComponent(card);
       render(filmsCardsContainer, newCard, RenderPosition.BEFOREEND);
       generateDetailedCard(card, newCard);
     });
