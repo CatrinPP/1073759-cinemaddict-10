@@ -8,7 +8,7 @@ import SpecialListComponent from './components/special-list.js';
 import SortComponent from './components/sort.js';
 import NoFilmsComponent from './components/no-films.js';
 import {generateCards} from './mock/card';
-import {render, RenderPosition} from './utils/render.js';
+import {render, RenderPosition, remove} from './utils/render.js';
 import {getRating, isEscEvent} from './utils/common.js';
 import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL} from './const.js';
 
@@ -136,10 +136,11 @@ const renderCards = (count, container) => {
 
 /**
  * Рендерит кнопку Show more
+ * @param {object} buttonComponent компонент кнопки Show More
  */
-const renderShowMoreButton = () => {
+const renderShowMoreButton = (buttonComponent) => {
   const filmsList = siteMainElement.querySelector(`.films-list`);
-  render(filmsList, new ShowMoreButtonComponent(), RenderPosition.BEFOREEND);
+  render(filmsList, buttonComponent, RenderPosition.BEFOREEND);
 };
 
 /**
@@ -153,7 +154,7 @@ const renderFilmsCatalog = () => {
     render(siteMainElement, new FilmsListComponent(), RenderPosition.BEFOREEND);
     filmsCardsContainer = siteMainElement.querySelector(`.films-list__container`);
     renderCards(showingCardsCount, filmsCardsContainer);
-    renderShowMoreButton();
+    renderShowMoreButton(showMoreButton);
   }
 };
 
@@ -205,7 +206,7 @@ const onShowMoreButtonClick = () => {
     });
 
   if (showingCardsCount >= cards.length) {
-    showMoreButton.remove();
+    remove(showMoreButton);
   }
 };
 
@@ -215,12 +216,12 @@ filtersCounts.favoritesCount = getFilterCount(`isFavorite`);
 
 const watchedMoviesCount = getRating(filtersCounts.historyCount);
 
+const showMoreButton = new ShowMoreButtonComponent();
+showMoreButton.setClickHandler(onShowMoreButtonClick);
+
 sortByRating(topRatedMovies);
 sortByComments(mostCommentedMovies);
 fillMoviesCount(cards.length);
 renderPageHeader();
 renderFilmsCatalog();
 renderSpecialLists();
-
-const showMoreButton = siteMainElement.querySelector(`.films-list__show-more`);
-showMoreButton.addEventListener(`click`, onShowMoreButtonClick);
