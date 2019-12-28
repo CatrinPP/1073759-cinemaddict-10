@@ -73,10 +73,10 @@ const renderPageHeader = () => {
  * Удаляет попап
  * @param  {object} popup объект попапа
  */
-const removePopup = (popup) => {
-  popup.removeElement();
-  body.querySelector(`.film-details`).remove();
-};
+// const removePopup = (popup) => {
+//   popup.removeElement();
+//   body.querySelector(`.film-details`).remove();
+// };
 
 /**
  * Отрисовывает попап
@@ -85,18 +85,18 @@ const removePopup = (popup) => {
 const renderPopup = (popup) => {
   const onEscPress = (evt) => {
     if (isEscEvent(evt)) {
-      removePopup(popup);
+      remove(popup);
       document.removeEventListener(`keydown`, onEscPress);
     }
   };
 
   const onCloseButtonClick = () => {
-    removePopup(popup);
+    remove(popup);
     document.removeEventListener(`keydown`, onEscPress);
   };
 
   if (body.querySelector(`.film-details`)) {
-    removePopup(popup);
+    remove(popup);
   }
 
   render(body, popup, RenderPosition.BEFOREEND);
