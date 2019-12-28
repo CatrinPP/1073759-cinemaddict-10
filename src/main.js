@@ -102,8 +102,7 @@ const renderPopup = (popup) => {
   render(body, popup, RenderPosition.BEFOREEND);
   document.addEventListener(`keydown`, onEscPress);
 
-  const close = popup.getElement().querySelector(`.film-details__close-btn`);
-  close.addEventListener(`click`, onCloseButtonClick);
+  popup.setCloseButtonHandler(onCloseButtonClick);
 };
 
 /**
@@ -113,19 +112,12 @@ const renderPopup = (popup) => {
  */
 const generateDetailedCard = (card, newCard) => {
   const detailedCard = new PopupComponent(card);
-  const cover = newCard.getElement().querySelector(`.film-card__poster`);
-  const title = newCard.getElement().querySelector(`.film-card__title`);
-  cover.style = `cursor:pointer`;
-  title.style = `cursor:pointer`;
-  const comments = newCard.getElement().querySelector(`.film-card__comments`);
 
   const onCardClick = () => {
     renderPopup(detailedCard);
   };
 
-  cover.addEventListener(`click`, onCardClick);
-  title.addEventListener(`click`, onCardClick);
-  comments.addEventListener(`click`, onCardClick);
+  newCard.setCardDetailsClickHandler(onCardClick);
 };
 
 /**
