@@ -24,4 +24,8 @@ export default class AbstractComponent {
   removeElement() {
     this._element = null;
   }
+
+  bind(handler) {
+    this.getElement().addEventListener(`click`, handler);
+  }
 }

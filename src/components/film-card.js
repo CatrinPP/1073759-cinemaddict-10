@@ -30,7 +30,7 @@ export default class FilmCard extends AbstractComponent {
     );
   }
 
-  setCardDetailsClickHandler(handler) {
+  bind(handler) {
     const cover = this.getElement().querySelector(`.film-card__poster`);
     const title = this.getElement().querySelector(`.film-card__title`);
     const comments = this.getElement().querySelector(`.film-card__comments`);
