@@ -5,8 +5,8 @@ import FilmsListComponent from '../components/films-list.js';
 import NoFilmsComponent from '../components/no-films.js';
 import SpecialListComponent from '../components/special-list.js';
 import SortComponent from '../components/sort.js';
-import SiteMenuComponent from './components/menu.js';
-import RatingComponent from './components/rating.js';
+import SiteMenuComponent from '../components/menu.js';
+import RatingComponent from '../components/rating.js';
 import {isEscEvent, siteMainElement, sortByRating, sortByComments, getRating} from '../utils/common.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL} from '../const.js';
@@ -22,8 +22,6 @@ export default class PageController {
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._filmListComponent = new FilmsListComponent();
     this._sortComponent = new SortComponent();
-    this._siteMenuComponent = new SiteMenuComponent();
-    this._ratingComponent = new RatingComponent();
   }
 
   /**
@@ -31,13 +29,15 @@ export default class PageController {
    * @param  {array} arr массив карточек фильмов
    */
   _renderPageHeader(arr) {
-    const watchedMoviesCount = getRating(filtersCounts.historyCount);
+    const siteHeaderElement = document.querySelector(`.header`);
 
     const filtersCounts = {
       watchlistCount: 0,
       historyCount: 0,
       favoritesCount: 0,
     };
+
+    const watchedMoviesCount = getRating(filtersCounts.historyCount);
 
     /**
      * Вычисляет кол-во фильмов соответствующих фильтру
@@ -53,9 +53,8 @@ export default class PageController {
     filtersCounts.historyCount = getFilterCount(`isWatched`);
     filtersCounts.favoritesCount = getFilterCount(`isFavorite`);
 
-    const siteHeaderElement = document.querySelector(`.header`);
-    render(siteHeaderElement, this._ratingComponent(watchedMoviesCount), RenderPosition.BEFOREEND);
-    render(siteMainElement, this._siteMenuComponent(filtersCounts), RenderPosition.BEFOREEND);
+    render(siteHeaderElement, new RatingComponent(watchedMoviesCount), RenderPosition.BEFOREEND);
+    render(siteMainElement, new SiteMenuComponent(filtersCounts), RenderPosition.BEFOREEND);
   }
 
   _renderCard(card, container) {
