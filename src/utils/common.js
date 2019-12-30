@@ -1,5 +1,7 @@
 import {RATING, ESC_KEYCODE} from '../const.js';
 
+const siteMainElement = document.querySelector(`.main`);
+
 const getRandomBoolean = () => Math.random() > 0.5;
 
 const getRandomIntegerNumber = (min, max) => {
@@ -48,6 +50,22 @@ const isEscEvent = (evt) => {
   return evt.keyCode === ESC_KEYCODE;
 };
 
+/**
+ * Сортирует массив фильмов по уменьшению рейтинга
+ * @param  {array} arr массив фильмов
+ */
+const sortByRating = (arr) => {
+  arr.sort((a, b) => b.rating - a.rating);
+};
+
+/**
+ * Сортирует массив фильмов по уменьшению кол-ва комментариев
+ * @param  {array} arr массив фильмов
+ */
+const sortByComments = (arr) => {
+  arr.sort((a, b) => b.comments.length - a.comments.length);
+};
+
 export {
   getRandomArrayItem,
   getRandomBoolean,
@@ -55,5 +73,8 @@ export {
   getRandomIntegerNumber,
   getRandomDate,
   getRating,
-  isEscEvent
+  isEscEvent,
+  siteMainElement,
+  sortByRating,
+  sortByComments
 };

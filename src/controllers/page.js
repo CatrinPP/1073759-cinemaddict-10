@@ -5,180 +5,206 @@ import FilmsListComponent from '../components/films-list.js';
 import NoFilmsComponent from '../components/no-films.js';
 import SpecialListComponent from '../components/special-list.js';
 import SortComponent from '../components/sort.js';
-import {isEscEvent} from '../utils/common.js';
+import SiteMenuComponent from './components/menu.js';
+import RatingComponent from './components/rating.js';
+import {isEscEvent, siteMainElement, sortByRating, sortByComments, getRating} from '../utils/common.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL} from '../const.js';
-
-const body = document.querySelector(`body`);
-const siteMainElement = document.querySelector(`.main`);
-let showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
-let filmsCardsContainer = null;
-const showMoreButton = new ShowMoreButtonComponent();
-
-/**
- * Сортирует массив фильмов по уменьшению рейтинга
- * @param  {array} arr массив фильмов
- */
-const sortByRating = (arr) => {
-  arr.sort((a, b) => b.rating - a.rating);
-};
-
-/**
- * Сортирует массив фильмов по уменьшению кол-ва комментариев
- * @param  {array} arr массив фильмов
- */
-const sortByComments = (arr) => {
-  arr.sort((a, b) => b.comments.length - a.comments.length);
-};
-
-const renderCard = (card, container) => {
-  const newCard = new FilmCardComponent(card);
-  render(container, newCard, RenderPosition.BEFOREEND);
-  generateDetailedCard(card, newCard);
-};
-
-/**
- * Рендерит карточки фильмов
- * @param  {number} count     кол-во карточек
- * @param  {element} container DOM-элемент рендеринга
- * @param  {array} array массив карточек фильмов
- */
-const renderCards = (count, container, array) => {
-  const currentCardsList = array.slice(0, count);
-  currentCardsList.forEach((card) => {
-    renderCard(card, container);
-  });
-};
-
-/**
- * Отрисовывает попап
- * @param  {object} popup объект попапа
- */
-const renderPopup = (popup) => {
-  const onEscPress = (evt) => {
-    if (isEscEvent(evt)) {
-      remove(popup);
-      document.removeEventListener(`keydown`, onEscPress);
-    }
-  };
-
-  const onCloseButtonClick = () => {
-    remove(popup);
-    document.removeEventListener(`keydown`, onEscPress);
-  };
-
-  if (body.querySelector(`.film-details`)) {
-    body.querySelector(`.film-details`).remove();
-  }
-
-  render(body, popup, RenderPosition.BEFOREEND);
-  document.addEventListener(`keydown`, onEscPress);
-
-  popup.setCloseButtonHandler(onCloseButtonClick);
-};
-
-/**
- * Генерирует попап при клике на элементы карточки
- * @param  {object} card    объект карточки фильма
- * @param  {object} newCard компонент карточки фильма
- */
-const generateDetailedCard = (card, newCard) => {
-  const detailedCard = new PopupComponent(card);
-
-  const onCardClick = () => {
-    renderPopup(detailedCard);
-  };
-
-  newCard.setCardDetailsClickHandler(onCardClick);
-};
-
-/**
- * Рендерит кнопку Show more
- * @param {object} buttonComponent компонент кнопки Show More
- */
-const renderShowMoreButton = (buttonComponent) => {
-  const filmsList = siteMainElement.querySelector(`.films-list`);
-  render(filmsList, buttonComponent, RenderPosition.BEFOREEND);
-};
-
-/**
- * Рендерит каталог фильмов
- * @param {array} array массив карточек фильмов
- */
-const renderFilmsCatalog = (array) => {
-  if (!array.length) {
-    render(siteMainElement, new NoFilmsComponent(), RenderPosition.BEFOREEND);
-  } else {
-    render(siteMainElement, new SortComponent(), RenderPosition.BEFOREEND);
-    render(siteMainElement, new FilmsListComponent(), RenderPosition.BEFOREEND);
-    filmsCardsContainer = siteMainElement.querySelector(`.films-list__container`);
-    renderCards(showingCardsCount, filmsCardsContainer, array);
-    renderShowMoreButton(showMoreButton);
-  }
-};
-
-/**
- * Рендерит дополнительный блок с фильмами
- * @param  {element} parentContainer родительский DOM-элемент для блока
- * @param  {array} arr             массив с фильмами
- * @param  {type} title           название блока
- */
-const renderExtraList = (parentContainer, arr, title) => {
-  render(parentContainer, new SpecialListComponent(title), RenderPosition.BEFOREEND);
-  const container = parentContainer.querySelector(`.${title.substring(0, 3).toLowerCase()}-container`);
-  const currentCardsList = arr.slice(0, CARDS_COUNT_ADDITIONAL);
-  currentCardsList.forEach((card) => {
-    renderCard(card, container);
-  });
-};
 
 export default class PageController {
   constructor(container) {
     this._container = container;
+
+    this._showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
+    this._filmsCardsContainer = null;
+
+    this._noFilmsComponent = new NoFilmsComponent();
+    this._showMoreButtonComponent = new ShowMoreButtonComponent();
+    this._filmListComponent = new FilmsListComponent();
+    this._sortComponent = new SortComponent();
+    this._siteMenuComponent = new SiteMenuComponent();
+    this._ratingComponent = new RatingComponent();
   }
 
-  render(cards) {
-    const topRatedMovies = cards.slice();
-    const mostCommentedMovies = cards.slice();
+  /**
+   * Рендерит хедер на страницу
+   * @param  {array} arr массив карточек фильмов
+   */
+  _renderPageHeader(arr) {
+    const watchedMoviesCount = getRating(filtersCounts.historyCount);
+
+    const filtersCounts = {
+      watchlistCount: 0,
+      historyCount: 0,
+      favoritesCount: 0,
+    };
 
     /**
-    * Рендерит дополнительные блоки с фильмами
-    */
-    const renderSpecialLists = () => {
-      const filmsContent = siteMainElement.querySelector(`.films`);
+     * Вычисляет кол-во фильмов соответствующих фильтру
+     * @param  {string} property свойство карточки фильма под фильтр
+     * @return {number} кол-во фильмов соответствующих фильтру
+     */
+    const getFilterCount = (property) => {
+      const filter = arr.filter((card) => card[property]);
+      return filter.length;
+    };
 
-      if (topRatedMovies[0].rating !== 0) {
-        renderExtraList(filmsContent, topRatedMovies, `Top rated`);
-      }
+    filtersCounts.watchlistCount = getFilterCount(`isAddedToWatchlist`);
+    filtersCounts.historyCount = getFilterCount(`isWatched`);
+    filtersCounts.favoritesCount = getFilterCount(`isFavorite`);
 
-      if (mostCommentedMovies[0].comments !== 0) {
-        renderExtraList(filmsContent, mostCommentedMovies, `Most commented`);
+    const siteHeaderElement = document.querySelector(`.header`);
+    render(siteHeaderElement, this._ratingComponent(watchedMoviesCount), RenderPosition.BEFOREEND);
+    render(siteMainElement, this._siteMenuComponent(filtersCounts), RenderPosition.BEFOREEND);
+  }
+
+  _renderCard(card, container) {
+    const newCard = new FilmCardComponent(card);
+    render(container, newCard, RenderPosition.BEFOREEND);
+    this._generateDetailedCard(card, newCard);
+  }
+
+  /**
+   * Рендерит карточки фильмов
+   * @param  {number} count     кол-во карточек
+   * @param  {element} container DOM-элемент рендеринга
+   * @param  {array} array массив карточек фильмов
+   */
+  _renderCards(count, container, array) {
+    const currentCardsList = array.slice(0, count);
+    currentCardsList.forEach((card) => {
+      this._renderCard(card, container);
+    });
+  }
+
+  /**
+   * Отрисовывает попап
+   * @param  {object} popup объект попапа
+   */
+  _renderPopup(popup) {
+    const body = document.querySelector(`body`);
+
+    const onEscPress = (evt) => {
+      if (isEscEvent(evt)) {
+        remove(popup);
+        document.removeEventListener(`keydown`, onEscPress);
       }
     };
 
+    const onCloseButtonClick = () => {
+      remove(popup);
+      document.removeEventListener(`keydown`, onEscPress);
+    };
+
+    if (body.querySelector(`.film-details`)) {
+      body.querySelector(`.film-details`).remove();
+    }
+
+    render(body, popup, RenderPosition.BEFOREEND);
+    document.addEventListener(`keydown`, onEscPress);
+
+    popup.bind(onCloseButtonClick);
+  }
+
+  /**
+   * Генерирует попап при клике на элементы карточки
+   * @param  {object} card    объект карточки фильма
+   * @param  {object} newCard компонент карточки фильма
+   */
+  _generateDetailedCard(card, newCard) {
+    const detailedCard = new PopupComponent(card);
+
+    const onCardClick = () => {
+      this._renderPopup(detailedCard);
+    };
+
+    newCard.bind(onCardClick);
+  }
+
+  /**
+   * Рендерит кнопку Show more
+   * @param {object} buttonComponent компонент кнопки Show More
+   */
+  _renderShowMoreButton(buttonComponent) {
+    const filmsList = siteMainElement.querySelector(`.films-list`);
+    render(filmsList, buttonComponent, RenderPosition.BEFOREEND);
+  }
+
+  /**
+   * Рендерит каталог фильмов
+   * @param {array} array массив карточек фильмов
+   */
+  _renderFilmsCatalog(array) {
+    if (!array.length) {
+      render(siteMainElement, this._noFilmsComponent, RenderPosition.BEFOREEND);
+    } else {
+      render(siteMainElement, this._sortComponent, RenderPosition.BEFOREEND);
+      render(siteMainElement, this._filmListComponent, RenderPosition.BEFOREEND);
+      this._filmsCardsContainer = siteMainElement.querySelector(`.films-list__container`);
+      this._renderCards(this._showingCardsCount, this._filmsCardsContainer, array);
+      this._renderShowMoreButton(this._showMoreButtonComponent);
+    }
+  }
+
+  /**
+   * Рендерит дополнительный блок с фильмами
+   * @param  {element} parentContainer родительский DOM-элемент для блока
+   * @param  {array} arr             массив с фильмами
+   * @param  {type} title           название блока
+   */
+  _renderExtraList(parentContainer, arr, title) {
+    render(parentContainer, new SpecialListComponent(title), RenderPosition.BEFOREEND);
+    const container = parentContainer.querySelector(`.${title.substring(0, 3).toLowerCase()}-container`);
+    const currentCardsList = arr.slice(0, CARDS_COUNT_ADDITIONAL);
+    currentCardsList.forEach((card) => {
+      this._renderCard(card, container);
+    });
+  }
+
+  /**
+  * Рендерит дополнительные блоки с фильмами
+  * @param {array} array массив всех карточек фильмов
+  */
+  _renderSpecialLists(array) {
+    const filmsContent = siteMainElement.querySelector(`.films`);
+    const topRatedMovies = array.slice();
+    const mostCommentedMovies = array.slice();
+
+    sortByRating(topRatedMovies);
+    sortByComments(mostCommentedMovies);
+
+    if (topRatedMovies[0].rating !== 0) {
+      this._renderExtraList(filmsContent, topRatedMovies, `Top rated`);
+    }
+
+    if (mostCommentedMovies[0].comments !== 0) {
+      this._renderExtraList(filmsContent, mostCommentedMovies, `Most commented`);
+    }
+  }
+
+  init(cards) {
     /**
     * Показывает больше карточек фильмов
     * @callback
     */
     const onShowMoreButtonClick = () => {
-      const prevCardsCount = showingCardsCount;
-      showingCardsCount = showingCardsCount + SHOWING_CARDS_COUNT_BY_BUTTON;
+      const prevCardsCount = this._showingCardsCount;
+      this._showingCardsCount = this._showingCardsCount + SHOWING_CARDS_COUNT_BY_BUTTON;
 
-      cards.slice(prevCardsCount, showingCardsCount)
+      cards.slice(prevCardsCount, this._showingCardsCount)
       .forEach((card) => {
-        renderCard(card, filmsCardsContainer);
+        this._renderCard(card, this._filmsCardsContainer);
       });
 
-      if (showingCardsCount >= cards.length) {
-        remove(showMoreButton);
+      if (this._showingCardsCount >= cards.length) {
+        remove(this._showMoreButtonComponent);
       }
     };
 
-    showMoreButton.setClickHandler(onShowMoreButtonClick);
+    this._showMoreButtonComponent.bind(onShowMoreButtonClick);
 
-    sortByRating(topRatedMovies);
-    sortByComments(mostCommentedMovies);
-    renderFilmsCatalog(cards);
-    renderSpecialLists();
+    this._renderPageHeader(cards);
+    this._renderFilmsCatalog(cards);
+    this._renderSpecialLists(cards);
   }
 }
