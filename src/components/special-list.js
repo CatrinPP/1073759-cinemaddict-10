@@ -1,9 +1,9 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
-export default class SpecialList {
+export default class SpecialList extends AbstractComponent {
   constructor(title) {
+    super();
     this._title = title;
-    this._element = null;
   }
 
   getTemplate() {
@@ -14,17 +14,5 @@ export default class SpecialList {
         <div class="films-list__container  ${this._title.substring(0, 3).toLowerCase()}-container"></div>
       </section>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

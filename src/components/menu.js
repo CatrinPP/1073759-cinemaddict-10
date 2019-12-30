@@ -1,9 +1,9 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
-export default class SiteMenu {
+export default class SiteMenu extends AbstractComponent {
   constructor(filters) {
+    super();
     this._filters = filters;
-    this._element = null;
   }
 
   getTemplate() {
@@ -18,17 +18,5 @@ export default class SiteMenu {
         <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
       </nav>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
 /**
  * Создает html-код с жанрами
@@ -49,10 +49,10 @@ const generateComments = (comments) => {
   return filmComments;
 };
 
-export default class Popup {
+export default class Popup extends AbstractComponent {
   constructor(card) {
+    super();
     this._card = card;
-    this._element = null;
   }
 
   getTemplate() {
@@ -176,15 +176,7 @@ export default class Popup {
     );
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  bind(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 }

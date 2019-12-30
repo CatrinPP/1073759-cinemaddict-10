@@ -1,9 +1,9 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
-export default class Rating {
+export default class Rating extends AbstractComponent {
   constructor(rating) {
+    super();
     this._rating = rating;
-    this._element = null;
   }
 
   getTemplate() {
@@ -13,17 +13,5 @@ export default class Rating {
         <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
       </section>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

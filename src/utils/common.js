@@ -1,9 +1,6 @@
-import {RATING, ESC_KEYCODE} from './const.js';
+import {RATING, ESC_KEYCODE} from '../const.js';
 
-const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
-};
+const siteMainElement = document.querySelector(`.main`);
 
 const getRandomBoolean = () => Math.random() > 0.5;
 
@@ -49,43 +46,35 @@ const getRating = (count) => {
   return result;
 };
 
-/**
- * Рендерит шаблон верстки в контейнер
- * @param  {element} container DOM-элемент рендеринга
- * @param  {string} element  эелемент вставки
- * @param  {string} place     местоположение в контейнере
- */
-const render = (container, element, place) => {
-  switch (place) {
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-  }
-};
-
-const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
 const isEscEvent = (evt) => {
   return evt.keyCode === ESC_KEYCODE;
 };
 
+/**
+ * Сортирует массив фильмов по уменьшению рейтинга
+ * @param  {array} arr массив фильмов
+ */
+const sortByRating = (arr) => {
+  arr.sort((a, b) => b.rating - a.rating);
+};
+
+/**
+ * Сортирует массив фильмов по уменьшению кол-ва комментариев
+ * @param  {array} arr массив фильмов
+ */
+const sortByComments = (arr) => {
+  arr.sort((a, b) => b.comments.length - a.comments.length);
+};
+
 export {
-  RenderPosition,
   getRandomArrayItem,
   getRandomBoolean,
   getRandomDecimalNumber,
   getRandomIntegerNumber,
   getRandomDate,
   getRating,
-  render,
-  createElement,
-  isEscEvent
+  isEscEvent,
+  siteMainElement,
+  sortByRating,
+  sortByComments
 };
