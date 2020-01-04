@@ -1,11 +1,12 @@
 import FilmCardComponent from '../components/film-card.js';
 import PopupComponent from '../components/popup.js';
-import {render, RenderPosition, remove} from '../utils/render.js';
+import {render, RenderPosition, remove, replace} from '../utils/render.js';
 import {isEscEvent} from '../utils/common.js';
 
 export default class MovieController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container;
+    this._onDataChange = onDataChange;
     this._popup = null;
     this._card = null;
   }
@@ -15,15 +16,39 @@ export default class MovieController {
    * @param  {object} card     объект карточки фильма
    */
   render(card) {
+    const oldCard = this._card;
     this._popup = new PopupComponent(card);
     this._card = new FilmCardComponent(card);
-    render(this._container, this._card, RenderPosition.BEFOREEND);
 
     const onCardClick = () => {
       this._renderPopup(this._popup);
     };
 
     this._card.bind(onCardClick);
+    this._card.setFavoritesButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, card, Object.assign({}, card, {
+        isFavorite: !card.isFavorite
+      }));
+    });
+    this._card.setWatchListdButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, card, Object.assign({}, card, {
+        isAddedToWatchlist: !card.isAddedToWatchlist
+      }));
+    });
+    this._card.setWatchedButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, card, Object.assign({}, card, {
+        isWatched: !card.isWatched
+      }));
+    });
+
+    if (oldCard) {
+      replace(this._card, oldCard);
+    } else {
+      render(this._container, this._card, RenderPosition.BEFOREEND);
+    }
   }
 
   /**

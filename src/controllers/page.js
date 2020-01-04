@@ -14,7 +14,7 @@ import MovieController from './movie.js';
 export default class PageController {
   constructor(container) {
     this._container = container;
-
+    this._cards = [];
     this._showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
     this._filmsCardsContainer = null;
 
@@ -22,6 +22,8 @@ export default class PageController {
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._filmListComponent = new FilmsListComponent();
     this._sortComponent = new SortComponent();
+
+    this._onDataChange = this._onDataChange.bind(this);
   }
 
   /**
@@ -66,54 +68,10 @@ export default class PageController {
   _renderCards(count, container, array) {
     const currentCardsList = array.slice(0, count);
     currentCardsList.forEach((card) => {
-      const movieController = new MovieController(container);
+      const movieController = new MovieController(container, this._onDataChange);
       movieController.render(card);
     });
   }
-
-  /**
-   * Отрисовывает попап
-   * @param  {object} popup объект попапа
-   */
-  // _renderPopup(popup) {
-  //   const body = document.querySelector(`body`);
-
-  //   const onEscPress = (evt) => {
-  //     if (isEscEvent(evt)) {
-  //       remove(popup);
-  //       document.removeEventListener(`keydown`, onEscPress);
-  //     }
-  //   };
-
-  //   const onCloseButtonClick = () => {
-  //     remove(popup);
-  //     document.removeEventListener(`keydown`, onEscPress);
-  //   };
-
-  //   if (body.querySelector(`.film-details`)) {
-  //     body.querySelector(`.film-details`).remove();
-  //   }
-
-  //   render(body, popup, RenderPosition.BEFOREEND);
-  //   document.addEventListener(`keydown`, onEscPress);
-
-  //   popup.bind(onCloseButtonClick);
-  // }
-
-  /**
-   * Генерирует попап при клике на элементы карточки
-   * @param  {object} card    объект карточки фильма
-   * @param  {object} newCard компонент карточки фильма
-   */
-  // _generateDetailedCard(card, newCard) {
-  //   const detailedCard = new PopupComponent(card);
-
-  //   const onCardClick = () => {
-  //     this._renderPopup(detailedCard);
-  //   };
-
-  //   newCard.bind(onCardClick);
-  // }
 
   /**
    * Рендерит кнопку Show more
@@ -151,7 +109,7 @@ export default class PageController {
     const container = parentContainer.querySelector(`.${title.substring(0, 3).toLowerCase()}-container`);
     const currentCardsList = arr.slice(0, CARDS_COUNT_ADDITIONAL);
     currentCardsList.forEach((card) => {
-      const movieController = new MovieController(container);
+      const movieController = new MovieController(container, this._onDataChange);
       movieController.render(card);
     });
   }
@@ -177,7 +135,21 @@ export default class PageController {
     }
   }
 
+  _onDataChange(movieController, oldData, newData) {
+    const index = this._cards.findIndex((it) => it === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._cards = [].concat(this._cards.slice(0, index), newData, this._cards.slice(index + 1));
+
+    movieController.render(this._cards[index]);
+  }
+
   init(cards) {
+    this._cards = cards;
+
     /**
     * Показывает больше карточек фильмов
     * @callback
@@ -188,7 +160,7 @@ export default class PageController {
 
       cards.slice(prevCardsCount, this._showingCardsCount)
       .forEach((card) => {
-        const movieController = new MovieController(this._filmsCardsContainer);
+        const movieController = new MovieController(this._filmsCardsContainer, this._onDataChange);
         movieController.render(card);
       });
 
