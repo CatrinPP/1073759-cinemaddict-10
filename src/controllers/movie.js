@@ -4,11 +4,18 @@ import {render, RenderPosition, remove, replace, createElement} from '../utils/r
 import {isEscEvent} from '../utils/common.js';
 
 export default class MovieController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
     this._popup = null;
     this._card = null;
+  }
+
+  setDefaultView() {
+    if (document.querySelector(`.film-details`)) {
+      document.querySelector(`.film-details`).remove();
+    }
   }
 
   /**
@@ -79,10 +86,7 @@ export default class MovieController {
       document.removeEventListener(`keydown`, onEscPress);
     };
 
-    if (body.querySelector(`.film-details`)) {
-      body.querySelector(`.film-details`).remove();
-    }
-
+    this._onViewChange(this);
     render(body, this._popup, RenderPosition.BEFOREEND);
     document.addEventListener(`keydown`, onEscPress);
 

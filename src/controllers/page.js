@@ -1,4 +1,3 @@
-// import PopupComponent from '../components/popup.js';
 import ShowMoreButtonComponent from '../components/show-more-button.js';
 import FilmsListComponent from '../components/films-list.js';
 import NoFilmsComponent from '../components/no-films.js';
@@ -68,7 +67,7 @@ export default class PageController {
   _renderCards(count, container, array) {
     const currentCardsList = array.slice(0, count);
     currentCardsList.forEach((card) => {
-      const movieController = new MovieController(container, this._onDataChange);
+      const movieController = new MovieController(container, this._onDataChange, this._onViewChange);
       movieController.render(card);
     });
   }
@@ -109,7 +108,7 @@ export default class PageController {
     const container = parentContainer.querySelector(`.${title.substring(0, 3).toLowerCase()}-container`);
     const currentCardsList = arr.slice(0, CARDS_COUNT_ADDITIONAL);
     currentCardsList.forEach((card) => {
-      const movieController = new MovieController(container, this._onDataChange);
+      const movieController = new MovieController(container, this._onDataChange, this._onViewChange);
       movieController.render(card);
     });
   }
@@ -147,6 +146,10 @@ export default class PageController {
     movieController.render(this._cards[index]);
   }
 
+  _onViewChange(movieController) {
+    movieController.setDefaultView();
+  }
+
   init(cards) {
     this._cards = cards;
 
@@ -160,7 +163,7 @@ export default class PageController {
 
       cards.slice(prevCardsCount, this._showingCardsCount)
       .forEach((card) => {
-        const movieController = new MovieController(this._filmsCardsContainer, this._onDataChange);
+        const movieController = new MovieController(this._filmsCardsContainer, this._onDataChange, this._onViewChange);
         movieController.render(card);
       });
 
