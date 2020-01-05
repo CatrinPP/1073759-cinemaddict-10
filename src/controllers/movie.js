@@ -1,6 +1,6 @@
 import FilmCardComponent from '../components/film-card.js';
 import PopupComponent from '../components/popup.js';
-import {render, RenderPosition, remove, replace} from '../utils/render.js';
+import {render, RenderPosition, remove, replace, createElement} from '../utils/render.js';
 import {isEscEvent} from '../utils/common.js';
 
 export default class MovieController {
@@ -42,6 +42,16 @@ export default class MovieController {
       this._onDataChange(this, card, Object.assign({}, card, {
         isWatched: !card.isWatched
       }));
+    });
+    this._popup.setWatchedButtonClickHandler(() => {
+      if (this._popup.getElement().querySelector(`.form-details__middle-container`)) {
+        this._popup.rerender();
+      } else {
+        const rating = createElement(this._popup.getRating());
+        const comments = this._popup.getElement().querySelector(`.form-details__bottom-container`);
+        const parent = comments.parentNode;
+        parent.insertBefore(rating, comments);
+      }
     });
 
     if (oldCard) {
