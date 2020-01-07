@@ -1,5 +1,6 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
 import {createElement} from '../utils/render.js';
+import moment from 'moment';
 
 /**
  * Создает html-код с жанрами
@@ -32,7 +33,7 @@ const createComment = (comments) => {
         <p class="film-details__comment-text">${text}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${date}</span>
+          <span class="film-details__comment-day">${moment(date).format(`YYYY/MM/DD HH:MM`)}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -157,7 +158,7 @@ export default class Popup extends AbstractSmartComponent {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Release Date</td>
-                    <td class="film-details__cell">${releaseDate}</td>
+                    <td class="film-details__cell">${moment(releaseDate).format(`DD MMMM YYYY`)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Runtime</td>
