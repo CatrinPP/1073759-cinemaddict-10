@@ -57,7 +57,7 @@ export default class Popup extends AbstractSmartComponent {
 
   getTemplate() {
     const {poster, age, title, originalTitle, rating, director, writers, actors, releaseDate, duration,
-      country, genres, description, comments} = this._card;
+      country, genres, description, comments, isAddedToWatchlist, isWatched, isFavorite} = this._card;
     const filmsGenres = createGenresMarkup(Array.from(genres));
     const genresCount = genres.length > 1 ? `Genres` : `Genre`;
 
@@ -123,13 +123,13 @@ export default class Popup extends AbstractSmartComponent {
             </div>
 
             <section class="film-details__controls">
-              <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+              <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isAddedToWatchlist ? `checked` : null}>
               <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-              <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+              <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatched ? `checked` : null}>
               <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-              <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+              <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorite ? `checked` : null}>
               <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
             </section>
           </div>
