@@ -1,6 +1,6 @@
 import FilmCardComponent from '../components/film-card.js';
 import PopupComponent from '../components/popup.js';
-import {render, RenderPosition, remove, replace, createElement} from '../utils/render.js';
+import {render, RenderPosition, remove, replace} from '../utils/render.js';
 import {isEscEvent} from '../utils/common.js';
 
 export default class MovieController {
@@ -24,72 +24,69 @@ export default class MovieController {
    */
   render(card) {
     const oldCard = this._card;
+    const oldPopup = this._popup;
+
     this._popup = new PopupComponent(card);
     this._card = new FilmCardComponent(card);
 
     const onCardClick = () => {
-      this._renderPopup(this._popup);
+      renderPopup();
     };
 
-    this._card.bind(onCardClick);
-    this._card.setFavoritesButtonClickHandler((evt) => {
+    const onFavoritesButtonClick = (evt) => {
       evt.preventDefault();
       this._onDataChange(this, card, Object.assign({}, card, {
         isFavorite: !card.isFavorite
       }));
-    });
-    this._card.setWatchListdButtonClickHandler((evt) => {
+    };
+
+    const onWatchlistButtonClick = (evt) => {
       evt.preventDefault();
       this._onDataChange(this, card, Object.assign({}, card, {
         isAddedToWatchlist: !card.isAddedToWatchlist
       }));
-    });
-    this._card.setWatchedButtonClickHandler((evt) => {
+    };
+
+    const onWatchedButtonClick = (evt) => {
       evt.preventDefault();
       this._onDataChange(this, card, Object.assign({}, card, {
         isWatched: !card.isWatched
       }));
-    });
-    this._popup.setWatchedButtonClickHandler(() => {
-      if (this._popup.getElement().querySelector(`.form-details__middle-container`)) {
-        this._popup.rerender();
-      } else {
-        const rating = createElement(this._popup.getRating());
-        const comments = this._popup.getElement().querySelector(`.form-details__bottom-container`);
-        const parent = comments.parentNode;
-        parent.insertBefore(rating, comments);
-      }
-    });
+    };
 
-    if (oldCard) {
+    this._card.bind(onCardClick, onFavoritesButtonClick, onWatchedButtonClick, onWatchlistButtonClick);
+
+    if (oldCard && oldPopup) {
       replace(this._card, oldCard);
     } else {
       render(this._container, this._card, RenderPosition.BEFOREEND);
     }
-  }
 
-  /**
-   * Отрисовывает попап
-   */
-  _renderPopup() {
-    const body = document.querySelector(`body`);
+    /**
+     * Отрисовывает попап
+     */
+    const renderPopup = () => {
+      const body = document.querySelector(`body`);
 
-    const onEscPress = (evt) => {
-      if (isEscEvent(evt)) {
-        remove(this._popup);
+      const onEscPress = (evt) => {
+        if (isEscEvent(evt)) {
+          document.removeEventListener(`keydown`, onEscPress);
+          remove(this._popup);
+          this._onDataChange(this, card, card);
+        }
+      };
+
+      const onCloseButtonClick = () => {
         document.removeEventListener(`keydown`, onEscPress);
-      }
+        remove(this._popup);
+        this._onDataChange(this, card, card);
+      };
+
+      this._onViewChange(this);
+      render(body, this._popup, RenderPosition.BEFOREEND);
+      document.addEventListener(`keydown`, onEscPress);
+
+      this._popup.bind(onCloseButtonClick);
     };
-
-    const onCloseButtonClick = () => {
-      remove(this._popup);
-      document.removeEventListener(`keydown`, onEscPress);
-    };
-
-    this._onViewChange(this);
-    render(body, this._popup, RenderPosition.BEFOREEND);
-    document.addEventListener(`keydown`, onEscPress);
-
-    this._popup.bind(onCloseButtonClick);
   }
 }
