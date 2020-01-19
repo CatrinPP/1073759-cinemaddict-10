@@ -30,15 +30,24 @@ export default class FilmCard extends AbstractComponent {
     );
   }
 
-  bind(handler) {
+  bind(onCardClick, onFavoritesButtonClick, onWatchedButtonClick, onWatchListButtonClick) {
     const cover = this.getElement().querySelector(`.film-card__poster`);
     const title = this.getElement().querySelector(`.film-card__title`);
     const comments = this.getElement().querySelector(`.film-card__comments`);
     cover.style = `cursor:pointer`;
     title.style = `cursor:pointer`;
-    cover.addEventListener(`click`, handler);
-    title.addEventListener(`click`, handler);
-    comments.addEventListener(`click`, handler);
+    cover.addEventListener(`click`, onCardClick);
+    title.addEventListener(`click`, onCardClick);
+    comments.addEventListener(`click`, onCardClick);
+
+    this.getElement().querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, onFavoritesButtonClick);
+
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, onWatchedButtonClick);
+
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, onWatchListButtonClick);
   }
 }
 
