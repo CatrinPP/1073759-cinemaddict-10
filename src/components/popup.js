@@ -232,9 +232,7 @@ export default class Popup extends AbstractSmartComponent {
   }
 
   bind(onCloseButtonClick) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
-      onCloseButtonClick();
-    });
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, onCloseButtonClick);
 
     this.getElement().querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, () => {
