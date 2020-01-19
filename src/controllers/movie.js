@@ -35,23 +35,20 @@ export default class MovieController {
 
     const onFavoritesButtonClick = (evt) => {
       evt.preventDefault();
-      this._onDataChange(this, card, Object.assign({}, card, {
-        isFavorite: !card.isFavorite
-      }));
+      card.isFavorite = !card.isFavorite;
+      this._onDataChange(this, card);
     };
 
     const onWatchlistButtonClick = (evt) => {
       evt.preventDefault();
-      this._onDataChange(this, card, Object.assign({}, card, {
-        isAddedToWatchlist: !card.isAddedToWatchlist
-      }));
+      card.isAddedToWatchlist = !card.isAddedToWatchlist;
+      this._onDataChange(this, card);
     };
 
     const onWatchedButtonClick = (evt) => {
       evt.preventDefault();
-      this._onDataChange(this, card, Object.assign({}, card, {
-        isWatched: !card.isWatched
-      }));
+      card.isWatched = !card.isWatched;
+      this._onDataChange(this, card);
     };
 
     this._card.bind(onCardClick, onFavoritesButtonClick, onWatchedButtonClick, onWatchlistButtonClick);
@@ -72,14 +69,14 @@ export default class MovieController {
         if (isEscEvent(evt)) {
           document.removeEventListener(`keydown`, onEscPress);
           remove(this._popup);
-          this._onDataChange(this, card, card);
+          this._onDataChange(this, card);
         }
       };
 
       const onCloseButtonClick = () => {
         document.removeEventListener(`keydown`, onEscPress);
         remove(this._popup);
-        this._onDataChange(this, card, card);
+        this._onDataChange(this, card);
       };
 
       this._onViewChange(this);

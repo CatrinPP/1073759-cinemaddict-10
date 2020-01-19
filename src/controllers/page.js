@@ -134,14 +134,12 @@ export default class PageController {
     }
   }
 
-  _onDataChange(movieController, oldData, newData) {
+  _onDataChange(movieController, oldData) {
     const index = this._cards.findIndex((it) => it === oldData);
 
     if (index === -1) {
       return;
     }
-
-    this._cards.splice(index, 1, newData);
 
     movieController.render(this._cards[index]);
   }
