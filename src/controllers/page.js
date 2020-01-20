@@ -2,7 +2,7 @@ import ShowMoreButtonComponent from '../components/show-more-button.js';
 import FilmsListComponent from '../components/films-list.js';
 import NoFilmsComponent from '../components/no-films.js';
 import SpecialListComponent from '../components/special-list.js';
-import SortComponent from '../components/sort.js';
+import SortComponent, {SortType} from '../components/sort.js';
 import SiteMenuComponent from '../components/menu.js';
 import RatingComponent from '../components/rating.js';
 import {siteMainElement, sortByRating, sortByComments, getRating} from '../utils/common.js';
@@ -171,6 +171,28 @@ export default class PageController {
     };
 
     this._showMoreButtonComponent.bind(onShowMoreButtonClick);
+    this._sortComponent.bind((sortType) => {
+      let sortedCards = [];
+
+      switch (sortType) {
+        case SortType.DATE:
+          sortedCards = cards.slice().sort((a, b) => b.year - a.year);
+          break;
+        case SortType.RATING:
+          sortedCards = cards.slice().sort((a, b) => b.rating - a.rating);
+          break;
+        default:
+          sortedCards = cards.slice();
+          break;
+      }
+
+      this._filmsCardsContainer.innerHTML = ``;
+      this._renderFilmsCatalog(sortedCards);
+
+      if (this._showingCardsCount >= sortedCards.length) {
+        remove(this._showMoreButtonComponent);
+      }
+    });
 
     this._renderPageHeader(cards);
     this._renderFilmsCatalog(cards);
