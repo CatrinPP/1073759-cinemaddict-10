@@ -16,7 +16,7 @@ const fillMoviesCount = (totalMovies) => {
   total.textContent = `${totalMovies} movies inside`;
 };
 
-const pageController = new PageController(siteMainElement);
+const pageController = new PageController(siteMainElement, moviesModel);
 
 fillMoviesCount(cards.length);
-pageController.init(cards);
+pageController.init();

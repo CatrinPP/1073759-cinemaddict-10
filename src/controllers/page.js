@@ -11,9 +11,9 @@ import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT
 import MovieController from './movie.js';
 
 export default class PageController {
-  constructor(container) {
+  constructor(container, moviesModel) {
     this._container = container;
-    this._cards = [];
+    this._moviesModel = moviesModel;
     this._showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
     this._filmsCardsContainer = null;
 
@@ -134,22 +134,20 @@ export default class PageController {
     }
   }
 
-  _onDataChange(movieController, oldData) {
-    const index = this._cards.findIndex((it) => it === oldData);
+  _onDataChange(movieController, card) {
+    const isSuccess = this._moviesModel.updateMovie(card.id, card);
 
-    if (index === -1) {
-      return;
+    if (isSuccess) {
+      movieController.render(card);
     }
-
-    movieController.render(this._cards[index]);
   }
 
   _onViewChange(movieController) {
     movieController.setDefaultView();
   }
 
-  init(cards) {
-    this._cards = cards;
+  init() {
+    const cards = this._moviesModel.getMovies();
 
     /**
     * Показывает больше карточек фильмов
