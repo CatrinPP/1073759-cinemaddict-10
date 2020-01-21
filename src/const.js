@@ -79,6 +79,13 @@ const EMOJI = [
   `./images/emoji/trophy.png`,
 ];
 
+const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`
+};
+
 export {
   RATING,
   CARDS_COUNT,
@@ -91,5 +98,6 @@ export {
   DESCRIPTION_ITEMS,
   TITLE_ITEMS,
   TEXT,
-  ESC_KEYCODE
+  ESC_KEYCODE,
+  FilterType
 };
