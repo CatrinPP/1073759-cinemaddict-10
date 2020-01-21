@@ -3,7 +3,7 @@ import FilmsListComponent from '../components/films-list.js';
 import NoFilmsComponent from '../components/no-films.js';
 import SpecialListComponent from '../components/special-list.js';
 import SortComponent, {SortType} from '../components/sort.js';
-import SiteMenuComponent from '../components/menu.js';
+import FilterComponent from '../components/filter.js';
 import RatingComponent from '../components/rating.js';
 import {siteMainElement, sortByRating, sortByComments, getRating} from '../utils/common.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
@@ -55,7 +55,7 @@ export default class PageController {
     filtersCounts.favoritesCount = getFilterCount(`isFavorite`);
 
     render(siteHeaderElement, new RatingComponent(watchedMoviesCount), RenderPosition.BEFOREEND);
-    render(siteMainElement, new SiteMenuComponent(filtersCounts), RenderPosition.BEFOREEND);
+    render(siteMainElement, new FilterComponent(filtersCounts), RenderPosition.BEFOREEND);
   }
 
   /**
