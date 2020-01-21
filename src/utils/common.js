@@ -66,6 +66,17 @@ const sortByComments = (arr) => {
   arr.sort((a, b) => b.comments.length - a.comments.length);
 };
 
+/**
+ * Вычисляет кол-во фильмов соответствующих фильтру
+ * @param  {Array} movies массив фильмов
+ * @param  {string} property свойство карточки фильма под фильтр
+ * @return {number} кол-во фильмов соответствующих фильтру
+ */
+const getFilterCount = (movies, property) => {
+  const filter = movies.filter((card) => card[property]);
+  return filter.length;
+};
+
 export {
   getRandomArrayItem,
   getRandomBoolean,
@@ -76,5 +87,6 @@ export {
   isEscEvent,
   siteMainElement,
   sortByRating,
-  sortByComments
+  sortByComments,
+  getFilterCount
 };

@@ -3,12 +3,12 @@ import FilmsListComponent from '../components/films-list.js';
 import NoFilmsComponent from '../components/no-films.js';
 import SpecialListComponent from '../components/special-list.js';
 import SortComponent, {SortType} from '../components/sort.js';
-import FilterComponent from '../components/filter.js';
 import RatingComponent from '../components/rating.js';
-import {siteMainElement, sortByRating, sortByComments, getRating} from '../utils/common.js';
+import {siteMainElement, sortByRating, sortByComments, getRating, getFilterCount} from '../utils/common.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL} from '../const.js';
 import MovieController from './movie.js';
+import FilterController from './filter.js';
 
 export default class PageController {
   constructor(container, moviesModel) {
@@ -31,31 +31,11 @@ export default class PageController {
    */
   _renderPageHeader(arr) {
     const siteHeaderElement = document.querySelector(`.header`);
-
-    const filtersCounts = {
-      watchlistCount: 0,
-      historyCount: 0,
-      favoritesCount: 0,
-    };
-
-    const watchedMoviesCount = getRating(filtersCounts.historyCount);
-
-    /**
-     * Вычисляет кол-во фильмов соответствующих фильтру
-     * @param  {string} property свойство карточки фильма под фильтр
-     * @return {number} кол-во фильмов соответствующих фильтру
-     */
-    const getFilterCount = (property) => {
-      const filter = arr.filter((card) => card[property]);
-      return filter.length;
-    };
-
-    filtersCounts.watchlistCount = getFilterCount(`isAddedToWatchlist`);
-    filtersCounts.historyCount = getFilterCount(`isWatched`);
-    filtersCounts.favoritesCount = getFilterCount(`isFavorite`);
+    const watchedMoviesCount = getRating(getFilterCount(arr, `isWatched`));
+    const filterController = new FilterController(siteMainElement, this._moviesModel);
 
     render(siteHeaderElement, new RatingComponent(watchedMoviesCount), RenderPosition.BEFOREEND);
-    render(siteMainElement, new FilterComponent(filtersCounts), RenderPosition.BEFOREEND);
+    filterController.render();
   }
 
   /**
