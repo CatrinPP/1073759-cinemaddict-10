@@ -9,7 +9,6 @@ import {siteMainElement, sortByRating, sortByComments, getRating, getFilterCount
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL, FilterType} from '../const.js';
 import MovieController from './movie.js';
-// import FilterController from './filter.js';
 
 export default class PageController {
   constructor(container, moviesModel) {
@@ -35,12 +34,15 @@ export default class PageController {
   _renderPageHeader(arr) {
     const siteHeaderElement = document.querySelector(`.header`);
     const watchedMoviesCount = getRating(getFilterCount(arr, `isWatched`));
-    // const filterController = new FilterController(siteMainElement, this._moviesModel);
 
     render(siteHeaderElement, new RatingComponent(watchedMoviesCount), RenderPosition.BEFOREEND);
-    // filterController.render();
   }
 
+  /**
+   * Рендерит Фильтры
+   * @param  {element} container DOM-элемент рендеринга
+   * @param  {object} moviesModel структура данных с фильмами
+   */
   _renderFilter(container, moviesModel) {
     const filtersCounts = {
       watchlistCount: 0,
