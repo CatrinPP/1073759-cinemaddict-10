@@ -4,11 +4,12 @@ import NoFilmsComponent from '../components/no-films.js';
 import SpecialListComponent from '../components/special-list.js';
 import SortComponent, {SortType} from '../components/sort.js';
 import RatingComponent from '../components/rating.js';
+import FilterComponent from '../components/filter.js';
 import {siteMainElement, sortByRating, sortByComments, getRating, getFilterCount} from '../utils/common.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
-import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL} from '../const.js';
+import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL, FilterType} from '../const.js';
 import MovieController from './movie.js';
-import FilterController from './filter.js';
+// import FilterController from './filter.js';
 
 export default class PageController {
   constructor(container, moviesModel) {
@@ -21,8 +22,10 @@ export default class PageController {
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._filmListComponent = new FilmsListComponent();
     this._sortComponent = new SortComponent();
+    this._filterComponent = null;
 
     this._onDataChange = this._onDataChange.bind(this);
+    this._activeFilterType = FilterType.ALL;
   }
 
   /**
@@ -32,10 +35,27 @@ export default class PageController {
   _renderPageHeader(arr) {
     const siteHeaderElement = document.querySelector(`.header`);
     const watchedMoviesCount = getRating(getFilterCount(arr, `isWatched`));
-    const filterController = new FilterController(siteMainElement, this._moviesModel);
+    // const filterController = new FilterController(siteMainElement, this._moviesModel);
 
     render(siteHeaderElement, new RatingComponent(watchedMoviesCount), RenderPosition.BEFOREEND);
-    filterController.render();
+    // filterController.render();
+  }
+
+  _renderFilter(container, moviesModel) {
+    const filtersCounts = {
+      watchlistCount: 0,
+      historyCount: 0,
+      favoritesCount: 0,
+    };
+
+    const allMovies = moviesModel.getMovies();
+
+    filtersCounts.watchlistCount = getFilterCount(allMovies, `isAddedToWatchlist`);
+    filtersCounts.historyCount = getFilterCount(allMovies, `isWatched`);
+    filtersCounts.favoritesCount = getFilterCount(allMovies, `isFavorite`);
+
+    this._filterComponent = new FilterComponent(filtersCounts);
+    render(container, this._filterComponent, RenderPosition.BEFOREEND);
   }
 
   /**
@@ -127,7 +147,7 @@ export default class PageController {
   }
 
   init() {
-    const cards = this._moviesModel.getMovies();
+    let cards = this._moviesModel.getMovies();
 
     /**
     * Показывает больше карточек фильмов
@@ -173,7 +193,21 @@ export default class PageController {
     });
 
     this._renderPageHeader(cards);
+    this._renderFilter(siteMainElement, this._moviesModel);
     this._renderFilmsCatalog(cards);
     this._renderSpecialLists(cards);
+
+    this._filterComponent.bind((filterType) => {
+      this._moviesModel.setFilter(filterType);
+      cards = this._moviesModel.getMovies();
+      this._activeFilterType = filterType;
+      this._filmsCardsContainer.innerHTML = ``;
+      this._showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
+      this._showMoreButtonComponent.bind(onShowMoreButtonClick);
+      this._renderFilmsCatalog(cards);
+      if (this._showingCardsCount >= cards.length) {
+        remove(this._showMoreButtonComponent);
+      }
+    });
   }
 }
