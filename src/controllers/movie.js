@@ -2,14 +2,19 @@ import FilmCardComponent from '../components/film-card.js';
 import PopupComponent from '../components/popup.js';
 import {render, RenderPosition, remove, replace} from '../utils/render.js';
 import {isEscEvent} from '../utils/common.js';
+import CommentController from './comment.js';
+import CommentsModel from '../models/comments.js';
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, commentsModel) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._popup = null;
     this._card = null;
+    this._comments = null;
+    this._commentsModel = commentsModel;
+    this._commentsControllers = [];
   }
 
   setDefaultView() {
@@ -28,6 +33,9 @@ export default class MovieController {
 
     this._popup = new PopupComponent(card);
     this._card = new FilmCardComponent(card);
+    this._comments = this._card._card.comments;
+    this._commentsModel = new CommentsModel();
+    this._commentsModel.setComments(this._comments);
 
     const onCardClick = () => {
       renderPopup();
@@ -59,11 +67,19 @@ export default class MovieController {
       render(this._container, this._card, RenderPosition.BEFOREEND);
     }
 
+    const renderComments = (container, array) => {
+      array.forEach((comment) => {
+        const commentController = new CommentController(container, this._onCommentsDataChange);
+        commentController.render(comment);
+      });
+    };
+
     /**
      * Отрисовывает попап
      */
     const renderPopup = () => {
       const body = document.querySelector(`body`);
+      const allComments = this._commentsModel.getComments();
 
       const onEscPress = (evt) => {
         if (isEscEvent(evt)) {
@@ -82,7 +98,8 @@ export default class MovieController {
       this._onViewChange(this);
       render(body, this._popup, RenderPosition.BEFOREEND);
       document.addEventListener(`keydown`, onEscPress);
-
+      const commentsList = document.querySelector(`.film-details__comments-list`);
+      renderComments(commentsList, allComments);
       this._popup.bind(onCloseButtonClick);
     };
   }
