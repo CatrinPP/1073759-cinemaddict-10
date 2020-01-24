@@ -9,6 +9,7 @@ const getComment = () => {
   const author = getRandomBoolean() ? `Tim Macoveev` : `John Doe`;
 
   return {
+    id: String(new Date() + Math.random()),
     author,
     text: getRandomArrayItem(TEXT),
     emoji: getRandomArrayItem(EMOJI),
