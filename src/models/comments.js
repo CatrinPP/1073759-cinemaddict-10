@@ -18,7 +18,7 @@ export default class Comment {
       return false;
     }
 
-    this._comments = [].concat(this._comments.slice(0, index), this._comments.slice(index + 1));
+    this._comments.splice(index, 1);
 
     return true;
   }
