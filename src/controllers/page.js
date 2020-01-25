@@ -9,7 +9,6 @@ import {siteMainElement, sortByRating, sortByComments, getRating, getFilterCount
 import {render, RenderPosition, remove} from '../utils/render.js';
 import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL, FilterType} from '../const.js';
 import MovieController from './movie.js';
-import CommentsModel from '../models/comments.js';
 
 export default class PageController {
   constructor(container, moviesModel) {
@@ -70,7 +69,7 @@ export default class PageController {
   _renderCards(count, container, array) {
     const currentCardsList = array.slice(0, count);
     currentCardsList.forEach((card) => {
-      const movieController = new MovieController(container, this._onDataChange, this._onViewChange, CommentsModel);
+      const movieController = new MovieController(container, this._onDataChange, this._onViewChange);
       movieController.render(card);
     });
   }
