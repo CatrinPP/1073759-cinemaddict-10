@@ -6,14 +6,14 @@ import CommentController from './comment.js';
 import CommentsModel from '../models/comments.js';
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange, commentsModel) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._popup = null;
     this._card = null;
     this._comments = null;
-    this._commentsModel = commentsModel;
+    this._commentsModel = null;
     this._commentsControllers = [];
   }
 
@@ -21,6 +21,10 @@ export default class MovieController {
     if (document.querySelector(`.film-details`)) {
       document.querySelector(`.film-details`).remove();
     }
+  }
+
+  _deleteComment(commentsModel, id) {
+    commentsModel.removeComment(id);
   }
 
   /**
@@ -69,7 +73,7 @@ export default class MovieController {
 
     const renderComments = (container, array) => {
       array.forEach((comment) => {
-        const commentController = new CommentController(container, this._onCommentsDataChange);
+        const commentController = new CommentController(container, this._commentsModel, this._deleteComment);
         commentController.render(comment);
       });
     };
@@ -85,14 +89,14 @@ export default class MovieController {
         if (isEscEvent(evt)) {
           document.removeEventListener(`keydown`, onEscPress);
           remove(this._popup);
-          this._onDataChange(this, card);
+          this._onDataChange(this, Object.assign({}, card.comments = this._comments));
         }
       };
 
       const onCloseButtonClick = () => {
         document.removeEventListener(`keydown`, onEscPress);
         remove(this._popup);
-        this._onDataChange(this, card);
+        this._onDataChange(this, Object.assign({}, card.comments = this._comments));
       };
 
       this._onViewChange(this);
