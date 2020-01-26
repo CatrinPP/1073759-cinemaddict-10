@@ -25,6 +25,8 @@ export default class MovieController {
 
   _deleteComment(commentsModel, id) {
     commentsModel.removeComment(id);
+    const count = document.querySelector(`.film-details__comments-count`);
+    count.textContent = `${commentsModel.getComments().length}`;
   }
 
   /**
@@ -64,9 +66,11 @@ export default class MovieController {
     };
 
     this._card.bind(onCardClick, onFavoritesButtonClick, onWatchedButtonClick, onWatchlistButtonClick);
-
+    const allComments = this._commentsModel.getComments();
     if (oldCard && oldPopup) {
       replace(this._card, oldCard);
+      const cardCommentsCount = document.querySelector(`.film-card__comments`);
+      cardCommentsCount.textContent = `${allComments.length} comments`;
     } else {
       render(this._container, this._card, RenderPosition.BEFOREEND);
     }
@@ -83,13 +87,13 @@ export default class MovieController {
      */
     const renderPopup = () => {
       const body = document.querySelector(`body`);
-      const allComments = this._commentsModel.getComments();
+      // const allComments = this._commentsModel.getComments();
 
       const onEscPress = (evt) => {
         if (isEscEvent(evt)) {
           document.removeEventListener(`keydown`, onEscPress);
           remove(this._popup);
-          this._onDataChange(this, Object.assign({}, card.comments = this._comments));
+          this._onDataChange(this, Object.assign({}, card, {comments: allComments}));
         }
       };
 
@@ -106,7 +110,7 @@ export default class MovieController {
       const onCloseButtonClick = () => {
         document.removeEventListener(`keydown`, onEscPress);
         remove(this._popup);
-        this._onDataChange(this, Object.assign({}, card.comments = this._comments));
+        this._onDataChange(this, Object.assign({}, card, {comments: allComments}));
       };
 
       /**
@@ -125,6 +129,8 @@ export default class MovieController {
         this._commentsModel.addComment(newComment);
         updateComments(this._commentsModel.getComments());
         event.target.value = null;
+        const count = document.querySelector(`.film-details__comments-count`);
+        count.textContent = `${this._commentsModel.getComments().length}`;
       };
 
       this._onViewChange(this);
@@ -133,6 +139,8 @@ export default class MovieController {
       const commentsList = document.querySelector(`.film-details__comments-list`);
       renderComments(commentsList, allComments);
       this._popup.bind(onCloseButtonClick, onNewCommentSubmit);
+      const count = document.querySelector(`.film-details__comments-count`);
+      count.textContent = `${allComments.length}`;
     };
   }
 }
