@@ -225,7 +225,7 @@ export default class Popup extends AbstractSmartComponent {
         this._card.isAddedToWatchlist = !this._card.isAddedToWatchlist;
       });
 
-    this.getElement().querySelector(`.film-details__new-comment`)
+    this.getElement().querySelector(`.film-details__comment-input`)
       .addEventListener(`keydown`, (evt) => {
         if (evt.ctrlKey && evt.keyCode === ENTER_KEYCODE) {
           onNewCommentSubmit();
