@@ -1,6 +1,7 @@
 import FilmCardComponent from '../components/film-card.js';
 import PopupComponent from '../components/popup.js';
 import {render, RenderPosition, remove, replace} from '../utils/render.js';
+import {getRandomBoolean} from '../utils/common.js';
 import {isEscEvent} from '../utils/common.js';
 import CommentController from './comment.js';
 import CommentsModel from '../models/comments.js';
@@ -14,7 +15,6 @@ export default class MovieController {
     this._card = null;
     this._comments = null;
     this._commentsModel = null;
-    this._commentsControllers = [];
   }
 
   setDefaultView() {
@@ -93,10 +93,38 @@ export default class MovieController {
         }
       };
 
+      /**
+       * Перерисовывает комментарии
+       * @param  {Array} newData Массив с комментариями
+       */
+      const updateComments = (newData) => {
+        const parent = document.querySelector(`.film-details__comments-list`);
+        parent.innerHTML = ``;
+        renderComments(parent, newData);
+      };
+
       const onCloseButtonClick = () => {
         document.removeEventListener(`keydown`, onEscPress);
         remove(this._popup);
         this._onDataChange(this, Object.assign({}, card.comments = this._comments));
+      };
+
+      /**
+       * Обработчик события отправки комментария (по Ctrl+Enter)
+       */
+      const onNewCommentSubmit = () => {
+        const emo = document.querySelector(`.film-details__emoji-item:checked`).value;
+        const newComment = {
+          id: String(new Date() + Math.random()),
+          author: getRandomBoolean() ? `Tim Macoveev` : `John Doe`,
+          text: event.target.value,
+          emoji: `./images/emoji/${emo}.png`,
+          date: new Date(),
+        };
+
+        this._commentsModel.addComment(newComment);
+        updateComments(this._commentsModel.getComments());
+        event.target.value = null;
       };
 
       this._onViewChange(this);
@@ -104,7 +132,7 @@ export default class MovieController {
       document.addEventListener(`keydown`, onEscPress);
       const commentsList = document.querySelector(`.film-details__comments-list`);
       renderComments(commentsList, allComments);
-      this._popup.bind(onCloseButtonClick);
+      this._popup.bind(onCloseButtonClick, onNewCommentSubmit);
     };
   }
 }

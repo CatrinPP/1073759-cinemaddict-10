@@ -22,4 +22,8 @@ export default class Comment {
 
     return true;
   }
+
+  addComment(comment) {
+    this._comments.unshift(comment);
+  }
 }

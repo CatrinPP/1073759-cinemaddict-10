@@ -3,6 +3,7 @@ const SHOWING_CARDS_COUNT_BY_BUTTON = 5;
 const CARDS_COUNT_ADDITIONAL = 2;
 const CARDS_COUNT = 15;
 const ESC_KEYCODE = 27;
+const ENTER_KEYCODE = 13;
 
 const RATING = [
   `Novice`,
@@ -99,5 +100,6 @@ export {
   TITLE_ITEMS,
   TEXT,
   ESC_KEYCODE,
+  ENTER_KEYCODE,
   FilterType
 };

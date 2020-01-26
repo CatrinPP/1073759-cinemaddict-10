@@ -1,6 +1,7 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
 import {createElement} from '../utils/render.js';
 import moment from 'moment';
+import {ENTER_KEYCODE} from '../const.js';
 
 /**
  * Создает html-код с жанрами
@@ -15,41 +16,6 @@ const createGenresMarkup = (filmGenres) => {
   })
   .join(`\n`);
 };
-
-/**
- * Создает html-код комментария по шаблону
- * @param  {object} comments объект структуры комментария
- * @return {string} html-код комментария
- */
-// const createComment = (comments) => {
-//   const {author, text, emoji, date} = comments;
-
-//   return (
-//     `<li class="film-details__comment">
-//       <span class="film-details__comment-emoji">
-//         <img src="${emoji}" width="55" height="55" alt="emoji">
-//       </span>
-//       <div>
-//         <p class="film-details__comment-text">${text}</p>
-//         <p class="film-details__comment-info">
-//           <span class="film-details__comment-author">${author}</span>
-//           <span class="film-details__comment-day">${moment(date).format(`YYYY/MM/DD HH:MM`)}</span>
-//           <button class="film-details__comment-delete">Delete</button>
-//         </p>
-//       </div>
-//     </li>`
-//   );
-// };
-
-/**
-   * Генерирует разметку со всеми комментарими
-   * @param {array} comments массив с комментариями
-   * @return {string} html-код со всеми комментариями
-   */
-// const generateComments = (comments) => {
-//   const filmComments = comments.map((comm) => createComment(comm));
-//   return filmComments;
-// };
 
 const createRatingMarkup = (card) => {
   const {poster, title} = card;
@@ -204,22 +170,22 @@ export default class Popup extends AbstractSmartComponent {
                 </label>
 
                 <div class="film-details__emoji-list">
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping">
+                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
                   <label class="film-details__emoji-label" for="emoji-smile">
                     <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
                   </label>
 
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="neutral-face">
+                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
                   <label class="film-details__emoji-label" for="emoji-sleeping">
                     <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
                   </label>
 
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="grinning">
+                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="puke">
                   <label class="film-details__emoji-label" for="emoji-gpuke">
                     <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
                   </label>
 
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="grinning">
+                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
                   <label class="film-details__emoji-label" for="emoji-angry">
                     <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
                   </label>
@@ -232,7 +198,7 @@ export default class Popup extends AbstractSmartComponent {
     );
   }
 
-  bind(onCloseButtonClick) {
+  bind(onCloseButtonClick, onNewCommentSubmit) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, onCloseButtonClick);
 
     this.getElement().querySelector(`.film-details__control-label--favorite`)
@@ -257,6 +223,13 @@ export default class Popup extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__control-label--watchlist`)
       .addEventListener(`click`, () => {
         this._card.isAddedToWatchlist = !this._card.isAddedToWatchlist;
+      });
+
+    this.getElement().querySelector(`.film-details__new-comment`)
+      .addEventListener(`keydown`, (evt) => {
+        if (evt.ctrlKey && evt.keyCode === ENTER_KEYCODE) {
+          onNewCommentSubmit();
+        }
       });
   }
 }
