@@ -1,4 +1,4 @@
-import {getRandomBoolean, getRandomArrayItem, getRandomDate} from '../utils/common.js';
+import {getRandomBoolean, getRandomArrayItem} from '../utils/common.js';
 import {EMOJI, TEXT} from '../const.js';
 
 /**
@@ -13,7 +13,7 @@ const getComment = () => {
     author,
     text: getRandomArrayItem(TEXT),
     emoji: getRandomArrayItem(EMOJI),
-    date: getRandomDate()
+    date: new Date(),
   };
 };
 
