@@ -5,6 +5,7 @@ import {getRandomBoolean} from '../utils/common.js';
 import {isEscEvent} from '../utils/common.js';
 import CommentController from './comment.js';
 import CommentsModel from '../models/comments.js';
+import he from 'he';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -117,12 +118,12 @@ export default class MovieController {
        * Обработчик события отправки комментария (по Ctrl+Enter)
        */
       const onNewCommentSubmit = () => {
-        const emo = document.querySelector(`.film-details__emoji-item:checked`).value;
+        const emoji = document.querySelector(`.film-details__emoji-item:checked`).value;
         const newComment = {
           id: String(new Date() + Math.random()),
           author: getRandomBoolean() ? `Tim Macoveev` : `John Doe`,
-          text: event.target.value,
-          emoji: `./images/emoji/${emo}.png`,
+          text: he.encode(event.target.value),
+          emoji: `./images/emoji/${emoji}.png`,
           date: new Date(),
         };
 
