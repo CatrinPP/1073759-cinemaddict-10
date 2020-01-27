@@ -8,6 +8,10 @@ export default class FilmCard extends AbstractComponent {
 
   getTemplate() {
     const {title, rating, year, duration, genres, poster, description, comments, isAddedToWatchlist, isWatched, isFavorite} = this._card;
+    let shortDescription = description;
+    if (description.length > 139) {
+      shortDescription = `${description.substr(0, 139)}...`;
+    }
 
     return (
       `<article class="film-card">
@@ -19,7 +23,7 @@ export default class FilmCard extends AbstractComponent {
           <span class="film-card__genre">${genres[0]}</span>
         </p>
         <img src=${poster} alt="" class="film-card__poster">
-        <p class="film-card__description">${description}</p>
+        <p class="film-card__description">${shortDescription}</p>
         <a class="film-card__comments">${comments.length} comments</a>
         <form class="film-card__controls">
           <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isAddedToWatchlist ? `film-card__controls-item--active` : null}">Add to watchlist</button>

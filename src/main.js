@@ -1,8 +1,11 @@
 import PageController from './controllers/page.js';
 import {generateCards} from './mock/card';
 import {siteMainElement} from './utils/common.js';
+import MoviesModel from './models/movies.js';
 
 const cards = generateCards();
+const moviesModel = new MoviesModel();
+moviesModel.setMovies(cards);
 
 /**
  * Выводит общее количество фильмов в сервисе
@@ -13,7 +16,7 @@ const fillMoviesCount = (totalMovies) => {
   total.textContent = `${totalMovies} movies inside`;
 };
 
-const pageController = new PageController(siteMainElement);
+const pageController = new PageController(siteMainElement, moviesModel);
 
 fillMoviesCount(cards.length);
-pageController.init(cards);
+pageController.init();

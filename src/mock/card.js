@@ -50,6 +50,7 @@ const generateCard = () => {
   const genres = GENRE_ITEMS.filter(() => Math.random() > 0.5);
 
   return {
+    id: String(new Date() + Math.random()),
     title,
     rating: getRandomDecimalNumber(2, 10),
     year,

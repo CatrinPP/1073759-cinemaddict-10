@@ -3,17 +3,17 @@ import FilmsListComponent from '../components/films-list.js';
 import NoFilmsComponent from '../components/no-films.js';
 import SpecialListComponent from '../components/special-list.js';
 import SortComponent, {SortType} from '../components/sort.js';
-import SiteMenuComponent from '../components/menu.js';
 import RatingComponent from '../components/rating.js';
-import {siteMainElement, sortByRating, sortByComments, getRating} from '../utils/common.js';
+import FilterComponent from '../components/filter.js';
+import {siteMainElement, sortByRating, sortByComments, getRating, getFilterCount} from '../utils/common.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
-import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL} from '../const.js';
+import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT_ADDITIONAL, FilterType} from '../const.js';
 import MovieController from './movie.js';
 
 export default class PageController {
-  constructor(container) {
+  constructor(container, moviesModel) {
     this._container = container;
-    this._cards = [];
+    this._moviesModel = moviesModel;
     this._showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
     this._filmsCardsContainer = null;
 
@@ -21,8 +21,10 @@ export default class PageController {
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._filmListComponent = new FilmsListComponent();
     this._sortComponent = new SortComponent();
+    this._filterComponent = null;
 
     this._onDataChange = this._onDataChange.bind(this);
+    this._activeFilterType = FilterType.ALL;
   }
 
   /**
@@ -31,31 +33,31 @@ export default class PageController {
    */
   _renderPageHeader(arr) {
     const siteHeaderElement = document.querySelector(`.header`);
+    const watchedMoviesCount = getRating(getFilterCount(arr, `isWatched`));
 
+    render(siteHeaderElement, new RatingComponent(watchedMoviesCount), RenderPosition.BEFOREEND);
+  }
+
+  /**
+   * Рендерит Фильтры
+   * @param  {element} container DOM-элемент рендеринга
+   * @param  {object} moviesModel структура данных с фильмами
+   */
+  _renderFilter(container, moviesModel) {
     const filtersCounts = {
       watchlistCount: 0,
       historyCount: 0,
       favoritesCount: 0,
     };
 
-    const watchedMoviesCount = getRating(filtersCounts.historyCount);
+    const allMovies = moviesModel.getMovies();
 
-    /**
-     * Вычисляет кол-во фильмов соответствующих фильтру
-     * @param  {string} property свойство карточки фильма под фильтр
-     * @return {number} кол-во фильмов соответствующих фильтру
-     */
-    const getFilterCount = (property) => {
-      const filter = arr.filter((card) => card[property]);
-      return filter.length;
-    };
+    filtersCounts.watchlistCount = getFilterCount(allMovies, `isAddedToWatchlist`);
+    filtersCounts.historyCount = getFilterCount(allMovies, `isWatched`);
+    filtersCounts.favoritesCount = getFilterCount(allMovies, `isFavorite`);
 
-    filtersCounts.watchlistCount = getFilterCount(`isAddedToWatchlist`);
-    filtersCounts.historyCount = getFilterCount(`isWatched`);
-    filtersCounts.favoritesCount = getFilterCount(`isFavorite`);
-
-    render(siteHeaderElement, new RatingComponent(watchedMoviesCount), RenderPosition.BEFOREEND);
-    render(siteMainElement, new SiteMenuComponent(filtersCounts), RenderPosition.BEFOREEND);
+    this._filterComponent = new FilterComponent(filtersCounts);
+    render(container, this._filterComponent, RenderPosition.BEFOREEND);
   }
 
   /**
@@ -134,22 +136,20 @@ export default class PageController {
     }
   }
 
-  _onDataChange(movieController, oldData) {
-    const index = this._cards.findIndex((it) => it === oldData);
+  _onDataChange(movieController, card) {
+    const isSuccess = this._moviesModel.updateMovie(card.id, card);
 
-    if (index === -1) {
-      return;
+    if (isSuccess) {
+      movieController.render(card);
     }
-
-    movieController.render(this._cards[index]);
   }
 
   _onViewChange(movieController) {
     movieController.setDefaultView();
   }
 
-  init(cards) {
-    this._cards = cards;
+  init() {
+    let cards = this._moviesModel.getMovies();
 
     /**
     * Показывает больше карточек фильмов
@@ -195,7 +195,21 @@ export default class PageController {
     });
 
     this._renderPageHeader(cards);
+    this._renderFilter(siteMainElement, this._moviesModel);
     this._renderFilmsCatalog(cards);
     this._renderSpecialLists(cards);
+
+    this._filterComponent.bind((filterType) => {
+      this._moviesModel.setFilter(filterType);
+      cards = this._moviesModel.getMovies();
+      this._activeFilterType = filterType;
+      this._filmsCardsContainer.innerHTML = ``;
+      this._showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
+      this._showMoreButtonComponent.bind(onShowMoreButtonClick);
+      this._renderFilmsCatalog(cards);
+      if (this._showingCardsCount >= cards.length) {
+        remove(this._showMoreButtonComponent);
+      }
+    });
   }
 }

@@ -3,6 +3,7 @@ const SHOWING_CARDS_COUNT_BY_BUTTON = 5;
 const CARDS_COUNT_ADDITIONAL = 2;
 const CARDS_COUNT = 15;
 const ESC_KEYCODE = 27;
+const ENTER_KEYCODE = 13;
 
 const RATING = [
   `Novice`,
@@ -79,6 +80,13 @@ const EMOJI = [
   `./images/emoji/trophy.png`,
 ];
 
+const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`
+};
+
 export {
   RATING,
   CARDS_COUNT,
@@ -91,5 +99,7 @@ export {
   DESCRIPTION_ITEMS,
   TITLE_ITEMS,
   TEXT,
-  ESC_KEYCODE
+  ESC_KEYCODE,
+  ENTER_KEYCODE,
+  FilterType
 };

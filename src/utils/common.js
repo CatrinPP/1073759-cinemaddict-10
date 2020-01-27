@@ -18,17 +18,6 @@ const getRandomArrayItem = (array) => {
   return array[randomIndex];
 };
 
-const getRandomDate = () => {
-  const targetDate = new Date();
-  const year = targetDate.getFullYear();
-  const month = targetDate.getMonth() + 1;
-  const day = targetDate.getDay();
-  const hours = targetDate.getHours() < 10 ? `0${targetDate.getHours()}` : targetDate.getHours();
-  const minutes = targetDate.getMinutes() < 10 ? `0${targetDate.getMinutes()}` : targetDate.getMinutes();
-
-  return `${year}/${month}/${day} ${hours}:${minutes}`;
-};
-
 /**
  * Получает звание пользователя
  * @param  {number} count кол-во просмотренных фильмов
@@ -66,15 +55,26 @@ const sortByComments = (arr) => {
   arr.sort((a, b) => b.comments.length - a.comments.length);
 };
 
+/**
+ * Вычисляет кол-во фильмов соответствующих фильтру
+ * @param  {Array} movies массив фильмов
+ * @param  {string} property свойство карточки фильма под фильтр
+ * @return {number} кол-во фильмов соответствующих фильтру
+ */
+const getFilterCount = (movies, property) => {
+  const filter = movies.filter((card) => card[property]);
+  return filter.length;
+};
+
 export {
   getRandomArrayItem,
   getRandomBoolean,
   getRandomDecimalNumber,
   getRandomIntegerNumber,
-  getRandomDate,
   getRating,
   isEscEvent,
   siteMainElement,
   sortByRating,
-  sortByComments
+  sortByComments,
+  getFilterCount
 };
