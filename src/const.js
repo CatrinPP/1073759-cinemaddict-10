@@ -5,6 +5,13 @@ const CARDS_COUNT = 15;
 const ESC_KEYCODE = 27;
 const ENTER_KEYCODE = 13;
 
+const HttpMethod = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
+};
+
 const RATING = [
   `Novice`,
   `Fan`,
@@ -101,5 +108,6 @@ export {
   TEXT,
   ESC_KEYCODE,
   ENTER_KEYCODE,
-  FilterType
+  FilterType,
+  HttpMethod
 };
