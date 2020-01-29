@@ -1,7 +1,9 @@
-import {HttpMethod} from './const.js';
+import {HttpMethod, HtppStatusCode} from './const.js';
+import Card from './models/card.js';
+import Comment from './models/comment.js';
 
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= HtppStatusCode.SUCCESS && response.status < HtppStatusCode.REDIRECT) {
     return response;
   } else {
     throw new Error(`${response.status}: ${response.text}`);
@@ -14,20 +16,20 @@ const API = class {
     this._authorization = authorization;
   }
 
-  // getCards() {
-  // }
+  getCards() {
+    return this._load({url: `movies`})
+    .then((response) => response.json())
+    .then(Card.parseCards);
+  }
 
-  // createCard(card) {
-  // }
-
-  // updateCard(id, data) {
-  // }
-
-  // deleteCard(id) {
-  // }
+  getComments(id) {
+    return this._load({url: `comments/${id}`})
+      .then((response) => response.json())
+      .then(Comment.parseComments);
+  }
 
   _load({url, method = HttpMethod.GET, body = null, headers = new Headers()}) {
-    headers.append(`Auhtorization`, this._authorization);
+    headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
       .then(checkStatus)
