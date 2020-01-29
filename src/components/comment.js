@@ -13,7 +13,7 @@ export default class Comment extends AbstractSmartComponent {
     return (
       `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
-          <img src="${emoji}" width="55" height="55" alt="emoji">
+          <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">
         </span>
         <div>
           <p class="film-details__comment-text">${text}</p>

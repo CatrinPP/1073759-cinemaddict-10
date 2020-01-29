@@ -118,12 +118,12 @@ export default class MovieController {
        * Обработчик события отправки комментария (по Ctrl+Enter)
        */
       const onNewCommentSubmit = () => {
-        const emoji = document.querySelector(`.film-details__emoji-item:checked`).value;
+        const checkedEmoji = document.querySelector(`.film-details__emoji-item:checked`).value;
         const newComment = {
           id: String(new Date() + Math.random()),
           author: getRandomBoolean() ? `Tim Macoveev` : `John Doe`,
           text: he.encode(event.target.value),
-          emoji: `./images/emoji/${emoji}.png`,
+          emoji: checkedEmoji,
           date: new Date(),
         };
 
