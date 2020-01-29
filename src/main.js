@@ -1,11 +1,12 @@
 import PageController from './controllers/page.js';
-import {generateCards} from './mock/card';
 import {siteMainElement} from './utils/common.js';
 import MoviesModel from './models/movies.js';
+import API from './api.js';
+import {END_POINT, AUTHORIZATION} from './const.js';
 
-const cards = generateCards();
+const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
-moviesModel.setMovies(cards);
+const pageController = new PageController(siteMainElement, moviesModel);
 
 /**
  * Выводит общее количество фильмов в сервисе
@@ -16,7 +17,18 @@ const fillMoviesCount = (totalMovies) => {
   total.textContent = `${totalMovies} movies inside`;
 };
 
-const pageController = new PageController(siteMainElement, moviesModel);
-
-fillMoviesCount(cards.length);
-pageController.init();
+api.getCards()
+  .then((cards) => {
+    const getAllComments = cards.map((card) => {
+      return api.getComments(card.id)
+        .then((comments) => {
+          card.comments = comments;
+        });
+    });
+    Promise.all(getAllComments)
+      .then(() => {
+        moviesModel.setMovies(cards);
+        pageController.init();
+        fillMoviesCount(cards.length);
+      });
+  });
