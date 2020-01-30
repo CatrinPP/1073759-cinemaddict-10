@@ -2,48 +2,60 @@ import moment from 'moment';
 
 export default class Card {
   constructor(data) {
-    this.id = data[`id`];
-    this.title = data.film_info[`title`];
-    this.rating = data.film_info[`total_rating`];
-    this.year = moment(data.film_info.release[`date`]).format(`YYYY`);
-    this.duration = data.film_info[`runtime`];
-    this.genres = data.film_info[`genre`];
-    this.poster = data.film_info[`poster`];
-    this.description = data.film_info[`description`];
-    this.comments = data[`comments`];
-    this.isAddedToWatchlist = data.user_details[`watchlist`];
-    this.isWatched = data.user_details[`already_watched`];
-    this.isFavorite = data.user_details[`favorite`];
-    this.originalTitle = data.film_info[`alternative_title`];
-    this.director = data.film_info[`director`];
-    this.writers = data.film_info[`writers`];
-    this.actors = data.film_info[`actors`];
-    this.releaseDate = data.film_info.release[`date`];
-    this.country = data.film_info.release[`release_country`];
-    this.age = data.film_info[`age_rating`];
+    const filmInfo = data.film_info;
+    const userDetails = data.user_details;
+    this.id = data.id;
+    this.title = filmInfo.title;
+    this.rating = filmInfo.total_rating;
+    this.year = moment(filmInfo.release.date).format(`YYYY`);
+    this.duration = filmInfo.runtime;
+    this.genres = filmInfo.genre;
+    this.poster = filmInfo.poster;
+    this.description = filmInfo.description;
+    this.comments = data.comments;
+    this.isAddedToWatchlist = userDetails.watchlist;
+    this.isWatched = userDetails.already_watched;
+    this.isFavorite = userDetails.favorite;
+    this.originalTitle = filmInfo.alternative_title;
+    this.director = filmInfo.director;
+    this.writers = filmInfo.writers;
+    this.actors = filmInfo.actors;
+    this.releaseDate = filmInfo.release.date;
+    this.country = filmInfo.release.release_country;
+    this.age = filmInfo.age_rating;
+    this.watchingDate = userDetails.watching_date;
   }
 
   toRaw() {
     return {
       'id': this.id,
-      'title': this.title,
-      'rating': this.rating,
-      'year': this.year,
-      'duration': this.duration,
-      'genres': this.genres,
-      'poster': this.poster,
-      'description': this.description,
-      'comments': this.comments,
-      'isAddedToWatchlist': this.isAddedToWatchlist,
-      'isWatched': this.isWatched,
-      'isFavorite': this.isFavorite,
-      'originalTitle': this.originalTitle,
-      'director': this.director,
-      'writers': this.writers,
-      'actors': this.actors,
-      'releaseDate': this.releaseDate,
-      'country': this.country,
-      'age': this.age,
+      'comments': this.comments.map((comment) => {
+        return comment.id ? comment.id : comment;
+      }),
+      'film_info': {
+        'title': this.title,
+        'alternative_title': this.originalTitle,
+        'total_rating': this.rating,
+        'poster': this.poster,
+        'age_rating': this.age,
+        'director': this.director,
+        'writers': this.writers,
+        'actors': this.actors,
+        'release': {
+          'date': this.releaseDate,
+          'release_country': this.country
+        },
+        'runtime': this.duration,
+        'genre': this.genres,
+        'description': this.description
+      },
+      'user_details': {
+        'personal_rating': this.userRating,
+        'watchlist': this.isAddedToWatchlist,
+        'already_watched': this.isWatched,
+        'watching_date': this.watchingDate ? new Date(this.watchingDate).toISOString() : new Date(0).toISOString(),
+        'favorite': this.isFavorite
+      }
     };
   }
 
@@ -53,5 +65,9 @@ export default class Card {
 
   static parseCards(data) {
     return data.map(Card.parseCard);
+  }
+
+  static clone(data) {
+    return new Card(data.toRaw());
   }
 }
