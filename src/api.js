@@ -28,6 +28,17 @@ const API = class {
       .then(Comment.parseComments);
   }
 
+  updateCard(id, data) {
+    return this._load({
+      url: `movies/${id}`,
+      method: HttpMethod.PUT,
+      body: JSON.stringify(data.toRaw()),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json())
+      .then(Card.parseCard);
+  }
+
   _load({url, method = HttpMethod.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
