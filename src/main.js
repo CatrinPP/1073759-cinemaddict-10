@@ -6,7 +6,7 @@ import {END_POINT, AUTHORIZATION} from './const.js';
 
 const api = new API(END_POINT, AUTHORIZATION);
 const moviesModel = new MoviesModel();
-const pageController = new PageController(siteMainElement, moviesModel);
+const pageController = new PageController(siteMainElement, moviesModel, api);
 
 /**
  * Выводит общее количество фильмов в сервисе

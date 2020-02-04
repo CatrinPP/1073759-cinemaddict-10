@@ -11,7 +11,7 @@ import {SHOWING_CARDS_COUNT_ON_START, SHOWING_CARDS_COUNT_BY_BUTTON, CARDS_COUNT
 import MovieController from './movie.js';
 
 export default class PageController {
-  constructor(container, moviesModel) {
+  constructor(container, moviesModel, api) {
     this._container = container;
     this._moviesModel = moviesModel;
     this._showingCardsCount = SHOWING_CARDS_COUNT_ON_START;
@@ -25,6 +25,7 @@ export default class PageController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._activeFilterType = FilterType.ALL;
+    this._api = api;
   }
 
   /**
@@ -69,7 +70,7 @@ export default class PageController {
   _renderCards(count, container, array) {
     const currentCardsList = array.slice(0, count);
     currentCardsList.forEach((card) => {
-      const movieController = new MovieController(container, this._onDataChange, this._onViewChange);
+      const movieController = new MovieController(container, this._onDataChange, this._onViewChange, this._api);
       movieController.render(card);
     });
   }
@@ -137,11 +138,14 @@ export default class PageController {
   }
 
   _onDataChange(movieController, card) {
-    const isSuccess = this._moviesModel.updateMovie(card.id, card);
+    this._api.updateCard(card.id, card)
+    .then(() => {
+      const isSuccess = this._moviesModel.updateMovie(card.id, card);
 
-    if (isSuccess) {
-      movieController.render(card);
-    }
+      if (isSuccess) {
+        movieController.render(card);
+      }
+    });
   }
 
   _onViewChange(movieController) {
