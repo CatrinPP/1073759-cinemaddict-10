@@ -5,6 +5,7 @@ import {getRandomBoolean} from '../utils/common.js';
 import {isEscEvent} from '../utils/common.js';
 import CommentController from './comment.js';
 import CommentsModel from '../models/comments.js';
+import CardModel from '../models/card.js';
 import he from 'he';
 
 export default class MovieController {
@@ -50,20 +51,23 @@ export default class MovieController {
 
     const onFavoritesButtonClick = (evt) => {
       evt.preventDefault();
-      card.isFavorite = !card.isFavorite;
-      this._onDataChange(this, card);
+      const newCard = CardModel.clone(card);
+      newCard.isFavorite = !newCard.isFavorite;
+      this._onDataChange(this, newCard);
     };
 
     const onWatchlistButtonClick = (evt) => {
       evt.preventDefault();
-      card.isAddedToWatchlist = !card.isAddedToWatchlist;
-      this._onDataChange(this, card);
+      const newCard = CardModel.clone(card);
+      newCard.isAddedToWatchlist = !newCard.isAddedToWatchlist;
+      this._onDataChange(this, newCard);
     };
 
     const onWatchedButtonClick = (evt) => {
       evt.preventDefault();
-      card.isWatched = !card.isWatched;
-      this._onDataChange(this, card);
+      const newCard = CardModel.clone(card);
+      newCard.isWatched = !newCard.isWatched;
+      this._onDataChange(this, newCard);
     };
 
     this._card.bind(onCardClick, onFavoritesButtonClick, onWatchedButtonClick, onWatchlistButtonClick);
@@ -88,13 +92,13 @@ export default class MovieController {
      */
     const renderPopup = () => {
       const body = document.querySelector(`body`);
-      // const allComments = this._commentsModel.getComments();
 
       const onEscPress = (evt) => {
         if (isEscEvent(evt)) {
+          const newCard = CardModel.clone(card);
           document.removeEventListener(`keydown`, onEscPress);
           remove(this._popup);
-          this._onDataChange(this, Object.assign({}, card, {comments: allComments}));
+          this._onDataChange(this, newCard);
         }
       };
 
@@ -109,9 +113,10 @@ export default class MovieController {
       };
 
       const onCloseButtonClick = () => {
+        const newCard = CardModel.clone(card);
         document.removeEventListener(`keydown`, onEscPress);
         remove(this._popup);
-        this._onDataChange(this, Object.assign({}, card, {comments: allComments}));
+        this._onDataChange(this, newCard);
       };
 
       /**
