@@ -24,6 +24,7 @@ export default class Card {
     this.country = filmInfo.release.release_country;
     this.age = filmInfo.age_rating;
     this.watchingDate = userDetails.watching_date;
+    this.userRating = userDetails.personal_rating;
   }
 
   toRaw() {
